@@ -1,14 +1,17 @@
 import org.jetbrains.kotlin.gradle.dsl.JvmTarget
 import java.util.Properties
 
-val localProps = Properties().apply {
-    val file = rootProject.file("local.properties")
-    if (file.exists()) file.inputStream().use { load(it) }
-}
+val localProps =
+    Properties().apply {
+        val file = rootProject.file("local.properties")
+        if (file.exists()) file.inputStream().use { load(it) }
+    }
 
-fun getProp(key: String, envKey: String, default: String = ""): String {
-    return System.getenv(envKey) ?: localProps.getProperty(key) ?: default
-}
+fun getProp(
+    key: String,
+    envKey: String,
+    default: String = "",
+): String = System.getenv(envKey) ?: localProps.getProperty(key) ?: default
 
 val apiUrl = getProp("api.url", "API_URL", "https://api.example.com/")
 
@@ -16,13 +19,12 @@ plugins {
     alias(libs.plugins.android.application)
     alias(libs.plugins.kotlin.android)
     alias(libs.plugins.kotlin.compose)
+    alias(libs.plugins.detekt)
 }
 
 android {
     namespace = "com.haykor.calendar"
-    compileSdk {
-        version = release(36)
-    }
+    compileSdk = 36
 
     defaultConfig {
         applicationId = "com.haykor.calendar"
@@ -38,10 +40,10 @@ android {
         release {
             isMinifyEnabled = true
             isShrinkResources = true
-            
+
             proguardFiles(
                 getDefaultProguardFile("proguard-android-optimize.txt"),
-                "proguard-rules.pro"
+                "proguard-rules.pro",
             )
         }
         debug {
@@ -50,18 +52,28 @@ android {
         }
     }
     compileOptions {
-        sourceCompatibility = JavaVersion.VERSION_11
-        targetCompatibility = JavaVersion.VERSION_11
+        sourceCompatibility = JavaVersion.VERSION_17
+        targetCompatibility = JavaVersion.VERSION_17
     }
     buildFeatures {
         compose = true
+        buildConfig = true
     }
 }
 
 kotlin {
     compilerOptions {
-        jvmTarget = JvmTarget.JVM_11
+        jvmTarget = JvmTarget.JVM_17
     }
+}
+
+detekt {
+    toolVersion = libs.versions.detekt.get()
+    source.setFrom(files("src/main/java", "src/test/java", "src/androidTest/java"))
+    config.setFrom(files("$rootDir/config/detekt/detekt.yml"))
+    buildUponDefaultConfig = true
+    allRules = false
+    autoCorrect = false
 }
 
 dependencies {
@@ -82,4 +94,6 @@ dependencies {
 
     debugImplementation(libs.androidx.compose.ui.tooling)
     debugImplementation(libs.androidx.compose.ui.test.manifest)
+
+    detektPlugins(libs.detekt.rules.compose)
 }
