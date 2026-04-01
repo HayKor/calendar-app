@@ -1,4 +1,16 @@
 import org.jetbrains.kotlin.gradle.dsl.JvmTarget
+import java.util.Properties
+
+val localProps = Properties().apply {
+    val file = rootProject.file("local.properties")
+    if (file.exists()) file.inputStream().use { load(it) }
+}
+
+fun getProp(key: String, envKey: String, default: String = ""): String {
+    return System.getenv(envKey) ?: localProps.getProperty(key) ?: default
+}
+
+val apiUrl = getProp("api.url", "API_URL", "https://api.example.com/")
 
 plugins {
     alias(libs.plugins.android.application)
@@ -24,11 +36,17 @@ android {
 
     buildTypes {
         release {
-            isMinifyEnabled = false
+            isMinifyEnabled = true
+            isShrinkResources = true
+            
             proguardFiles(
                 getDefaultProguardFile("proguard-android-optimize.txt"),
                 "proguard-rules.pro"
             )
+        }
+        debug {
+            buildConfigField("String", "API_URL", "\"$apiUrl\"")
+            buildConfigField("boolean", "IS_DEBUG", "true")
         }
     }
     compileOptions {
