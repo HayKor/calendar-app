@@ -71,9 +71,8 @@ detekt {
     toolVersion = libs.versions.detekt.get()
     source.setFrom(files("src/main/java", "src/test/java", "src/androidTest/java"))
     config.setFrom(files("$rootDir/config/detekt/detekt.yml"))
-    buildUponDefaultConfig = true
-    allRules = false
     autoCorrect = false
+    buildUponDefaultConfig = true
 }
 
 dependencies {

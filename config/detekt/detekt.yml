@@ -1,0 +1,20 @@
+naming:
+  FunctionNaming:
+    active: true
+    ignoreAnnotated:
+      - 'Composable'
+
+style:
+  MagicNumber:
+    active: true
+    ignoreAnnotated:
+      - 'Test'
+    excludes:
+      - '**/ui/theme/Color.kt'
+      - '**/ui/theme/Theme.kt'
+
+Compose:
+  ComposableAnnotationNaming:
+    active: true
+  ComposableNaming:
+    active: true
