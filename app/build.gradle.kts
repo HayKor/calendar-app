@@ -13,13 +13,15 @@ fun getProp(
     default: String = "",
 ): String = System.getenv(envKey) ?: localProps.getProperty(key) ?: default
 
-val apiUrl = getProp("api.url", "API_URL", "https://api.example.com/")
+val apiUrl = getProp("api.url", "API_URL")
 
 plugins {
     alias(libs.plugins.android.application)
     alias(libs.plugins.kotlin.android)
     alias(libs.plugins.kotlin.compose)
     alias(libs.plugins.detekt)
+    alias(libs.plugins.kotlin.serialization)
+    alias(libs.plugins.ksp)
 }
 
 android {
@@ -76,15 +78,34 @@ detekt {
 }
 
 dependencies {
+    // Android & core
     implementation(libs.androidx.core.ktx)
     implementation(libs.androidx.lifecycle.runtime.ktx)
     implementation(libs.androidx.activity.compose)
+
+    // UI
     implementation(platform(libs.androidx.compose.bom))
     implementation(libs.androidx.compose.ui)
     implementation(libs.androidx.compose.ui.graphics)
     implementation(libs.androidx.compose.ui.tooling.preview)
     implementation(libs.androidx.compose.material3)
 
+    // DI
+    implementation(libs.koin.android)
+    implementation(libs.koin.androidx.compose)
+
+    // Ktor
+    implementation(libs.ktor.client.core)
+    implementation(libs.ktor.client.okhttp)
+    implementation(libs.ktor.client.content.negotiation)
+    implementation(libs.ktor.serialization.kotlinx.json)
+    implementation(libs.ktor.client.logging)
+
+    // Room
+    implementation(libs.androidx.room3.runtime)
+    ksp(libs.androidx.room3.compiler)
+
+    // Testing
     testImplementation(libs.junit)
     androidTestImplementation(libs.androidx.junit)
     androidTestImplementation(libs.androidx.espresso.core)
@@ -94,5 +115,6 @@ dependencies {
     debugImplementation(libs.androidx.compose.ui.tooling)
     debugImplementation(libs.androidx.compose.ui.test.manifest)
 
+    // Detekt linter
     detektPlugins(libs.detekt.rules.compose)
 }
