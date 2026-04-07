@@ -1,4 +1,4 @@
-package com.haykor.calendar.ui.theme
+package com.haykor.calendar.core.ui.theme
 
 import androidx.compose.material3.Typography
 import androidx.compose.ui.text.font.Font
