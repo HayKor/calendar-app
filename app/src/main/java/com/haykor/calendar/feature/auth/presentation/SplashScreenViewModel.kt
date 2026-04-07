@@ -32,21 +32,26 @@ class SplashScreenViewModel(
     }
 
     private fun checkAuth() {
-        _state.update { it.copy(isLoading = false, error = null) }
+        _state.update { it.copy(isLoading = true, error = null) }
         viewModelScope.launch {
-            when (val isAuthorized = ensureAuthorizedUseCase()) {
+            when (val result = ensureAuthorizedUseCase()) {
                 is DataResult.Error -> {
                     _state.update {
                         it.copy(
                             isLoading = false,
-                            error = isAuthorized.error.toString(),
+                            error = "Authentication check failed. Please try again.",
                         )
                     }
                 }
 
                 is DataResult.Success -> {
-                    _state.update { it.copy(isAuthorized = isAuthorized.data) }
-                    if (isAuthorized.data) {
+                    _state.update {
+                        it.copy(
+                            isAuthorized = result.data,
+                            isLoading = false,
+                        )
+                    }
+                    if (result.data) {
                         _event.send(SplashScreenEvent.NavigateToMain)
                     } else {
                         _event.send(SplashScreenEvent.NavigateToAuth)
