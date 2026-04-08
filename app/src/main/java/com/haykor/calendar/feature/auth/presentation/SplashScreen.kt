@@ -23,6 +23,7 @@ import androidx.compose.ui.tooling.preview.PreviewLightDark
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.haykor.calendar.R
+import com.haykor.calendar.core.common.presentation.UiText
 import com.haykor.calendar.core.ui.theme.AppTheme
 import com.haykor.calendar.core.ui.theme.LocalSpacing
 import org.koin.compose.viewmodel.koinViewModel
@@ -89,12 +90,12 @@ private fun SplashScreen(
 
         state.error?.let { error ->
             Text(
-                text = error,
+                text = error.asString(),
                 color = MaterialTheme.colorScheme.error,
                 style = MaterialTheme.typography.bodyMedium,
             )
             Button(onClick = { onIntent(SplashScreenIntent.CheckAuth) }) {
-                Text(text = "Try Again")
+                Text(text = stringResource(R.string.try_again))
             }
         }
     }
@@ -111,7 +112,7 @@ private fun SplashScreenErrorPreview() {
                 state =
                     SplashScreenState(
                         isLoading = false,
-                        error = "Authentication failed",
+                        error = UiText.DynamicString("Authentication failed"),
                     ),
                 onIntent = {},
                 modifier = Modifier.padding(paddingValues),

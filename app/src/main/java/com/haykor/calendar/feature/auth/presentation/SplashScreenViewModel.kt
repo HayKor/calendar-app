@@ -2,7 +2,10 @@ package com.haykor.calendar.feature.auth.presentation
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.haykor.calendar.R
 import com.haykor.calendar.core.common.domain.DataResult
+import com.haykor.calendar.core.common.presentation.UiText
+import com.haykor.calendar.feature.auth.domain.AuthError
 import com.haykor.calendar.feature.auth.domain.EnsureAuthenticatedUseCase
 import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -39,7 +42,7 @@ class SplashScreenViewModel(
                     _state.update {
                         it.copy(
                             isLoading = false,
-                            error = "Authentication check failed. Please try again.",
+                            error = result.error.toUiText(),
                         )
                     }
                 }
@@ -60,4 +63,10 @@ class SplashScreenViewModel(
             }
         }
     }
+
+    private fun AuthError.toUiText(): UiText =
+        when (this) {
+            AuthError.NetworkError -> UiText.StringResource(R.string.error_network)
+            AuthError.UnknownError -> UiText.StringResource(R.string.error_unknown)
+        }
 }

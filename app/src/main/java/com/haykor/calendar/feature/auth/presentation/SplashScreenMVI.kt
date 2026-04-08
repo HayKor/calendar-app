@@ -1,9 +1,13 @@
 package com.haykor.calendar.feature.auth.presentation
 
+import androidx.compose.runtime.Stable
+import com.haykor.calendar.core.common.presentation.UiText
+
+@Stable
 data class SplashScreenState(
     val isAuthorized: Boolean = false,
     val isLoading: Boolean = true,
-    val error: String? = null,
+    val error: UiText? = null,
 )
 
 sealed interface SplashScreenIntent {

@@ -1,4 +1,9 @@
 <resources>
     <string name="app_name">Calendar</string>
     <string name="app_icon_description">App icon</string>
+    
+    <!-- Auth Errors -->
+    <string name="error_network">Network error. Please check your connection.</string>
+    <string name="error_unknown">An unknown error occurred.</string>
+    <string name="try_again">Try Again</string>
 </resources>
