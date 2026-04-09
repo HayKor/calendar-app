@@ -6,4 +6,6 @@ sealed interface AuthError : RootError {
     object NetworkError : AuthError
 
     object UnknownError : AuthError
+
+    object Unauthorized : AuthError
 }
