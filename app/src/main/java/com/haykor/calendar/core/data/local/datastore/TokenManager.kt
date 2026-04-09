@@ -18,14 +18,18 @@ class TokenManager(
         val REFRESH_TOKEN = stringPreferencesKey("refresh_token")
         val ACCESS_TOKEN_EXPIRY = longPreferencesKey("access_token_expiry")
         val REFRESH_TOKEN_EXPIRY = longPreferencesKey("refresh_token_expiry")
+
+        const val ACCESS_TOKEN_BUFFER_MS = 60_000L // refresh 1 minute before actual expiry
     }
 
     suspend fun saveTokens(tokens: Tokens) {
         dataStore.edit { preferences ->
             preferences[ACCESS_TOKEN] = tokens.accessToken
             preferences[REFRESH_TOKEN] = tokens.refreshToken
-            preferences[ACCESS_TOKEN_EXPIRY] = tokens.accessTokenExpiresIn
-            preferences[REFRESH_TOKEN_EXPIRY] = tokens.refreshTokenExpiresIn
+            preferences[ACCESS_TOKEN_EXPIRY] =
+                System.currentTimeMillis() + tokens.accessTokenExpiresIn
+            preferences[REFRESH_TOKEN_EXPIRY] =
+                System.currentTimeMillis() + tokens.refreshTokenExpiresIn
         }
     }
 
@@ -36,7 +40,7 @@ class TokenManager(
     suspend fun isAccessTokenExpired(): Boolean {
         val expiry = dataStore.data.map { it[ACCESS_TOKEN_EXPIRY] ?: 0L }.first()
         Log.d("tokens", "expiryAccess=$expiry currentTime=${System.currentTimeMillis()}")
-        return System.currentTimeMillis() >= expiry - 60000 // 1 minute buffer
+        return System.currentTimeMillis() >= expiry - ACCESS_TOKEN_BUFFER_MS
     }
 
     suspend fun isRefreshTokenExpired(): Boolean {

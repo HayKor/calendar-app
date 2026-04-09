@@ -35,20 +35,22 @@ private object SplashScreenDimensions {
 
 @Composable
 fun SplashScreen(
+    navigateToMain: () -> Unit,
+    navigateToAuth: () -> Unit,
     modifier: Modifier = Modifier,
     viewModel: SplashScreenViewModel = koinViewModel(),
 ) {
     val state by viewModel.state.collectAsStateWithLifecycle()
 
-    LaunchedEffect(Unit) {
+    LaunchedEffect(navigateToMain, navigateToAuth) {
         viewModel.event.collect { event ->
             when (event) {
                 is SplashScreenEvent.NavigateToMain -> {
-                    // TODO: Navigate to Main
+                    navigateToMain()
                 }
 
                 is SplashScreenEvent.NavigateToAuth -> {
-                    // TODO: Navigate to Auth
+                    navigateToAuth()
                 }
             }
         }

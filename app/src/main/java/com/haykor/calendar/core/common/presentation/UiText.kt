@@ -11,13 +11,12 @@ sealed interface UiText {
 
     class StringResource(
         @field:StringRes val resId: Int,
-        vararg val args: Any,
     ) : UiText
 
     @Composable
     fun asString(): String =
         when (this) {
             is DynamicString -> value
-            is StringResource -> stringResource(resId, *args)
+            is StringResource -> stringResource(resId)
         }
 }

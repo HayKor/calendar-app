@@ -12,6 +12,11 @@ style:
     excludes:
       - '**/ui/theme/Color.kt'
       - '**/ui/theme/Theme.kt'
+  UnusedPrivateMember:
+    active: true
+    ignoreAnnotated:
+      - 'Preview'
+      - 'PreviewLightDark'
 
 Compose:
   ComposableAnnotationNaming:
