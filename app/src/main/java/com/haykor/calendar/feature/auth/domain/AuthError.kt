@@ -7,5 +7,7 @@ sealed interface AuthError : RootError {
 
     object UnknownError : AuthError
 
-    object Unauthorized : AuthError
+    object Unauthorized : AuthError // HTTP 401
+
+    object SessionExpired : AuthError
 }

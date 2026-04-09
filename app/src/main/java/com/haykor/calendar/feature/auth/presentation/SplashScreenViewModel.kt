@@ -38,26 +38,30 @@ class SplashScreenViewModel(
         _state.update { it.copy(isLoading = true, error = null) }
         viewModelScope.launch {
             when (val result = ensureAuthorizedUseCase()) {
-                is DataResult.Error -> {
-                    _state.update {
-                        it.copy(
-                            isLoading = false,
-                            error = result.error.toUiText(),
-                        )
-                    }
+                is DataResult.Success -> {
+                    _state.update { it.copy(isLoading = false, isAuthorized = true) }
+                    _event.send(SplashScreenEvent.NavigateToMain)
                 }
 
-                is DataResult.Success -> {
-                    _state.update {
-                        it.copy(
-                            isAuthorized = result.data,
-                            isLoading = false,
-                        )
-                    }
-                    if (result.data) {
-                        _event.send(SplashScreenEvent.NavigateToMain)
-                    } else {
-                        _event.send(SplashScreenEvent.NavigateToAuth)
+                is DataResult.Error -> {
+                    when (result.error) {
+                        AuthError.SessionExpired,
+                        AuthError.Unauthorized,
+                        -> {
+                            _state.update { it.copy(isLoading = false) }
+                            _event.send(SplashScreenEvent.NavigateToAuth)
+                        }
+
+                        AuthError.NetworkError,
+                        AuthError.UnknownError,
+                        -> {
+                            _state.update {
+                                it.copy(
+                                    isLoading = false,
+                                    error = result.error.toUiText(),
+                                )
+                            }
+                        }
                     }
                 }
             }
@@ -67,6 +71,11 @@ class SplashScreenViewModel(
     private fun AuthError.toUiText(): UiText =
         when (this) {
             AuthError.NetworkError -> UiText.StringResource(R.string.error_network)
+
             AuthError.UnknownError -> UiText.StringResource(R.string.error_unknown)
+
+            AuthError.SessionExpired,
+            AuthError.Unauthorized,
+            -> UiText.StringResource(R.string.error_session_expired)
         }
 }
