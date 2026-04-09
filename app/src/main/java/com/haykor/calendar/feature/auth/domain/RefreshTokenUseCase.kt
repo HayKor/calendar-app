@@ -1,6 +1,7 @@
 package com.haykor.calendar.feature.auth.domain
 
 import com.haykor.calendar.core.common.domain.DataResult
+import com.haykor.calendar.core.common.domain.map
 import com.haykor.calendar.core.data.local.datastore.TokenManager
 import java.io.IOException
 import java.net.ConnectException
@@ -11,14 +12,12 @@ class RefreshTokenUseCase(
     private val tokenManager: TokenManager,
     private val authService: AuthService,
 ) {
-    suspend operator fun invoke(refreshToken: String): DataResult<Unit, AuthError> {
-        val refreshToken =
-            tokenManager.getRefreshToken() ?: return DataResult.Error(AuthError.UnknownError)
-
-        return try {
+    suspend operator fun invoke(refreshToken: String): DataResult<Unit, AuthError> =
+        try {
             when (val result = authService.refreshTokens(refreshToken)) {
                 is DataResult.Success -> {
-                    result
+                    tokenManager.saveTokens(result.data)
+                    result.map { Unit }
                 }
 
                 is DataResult.Error -> {
@@ -39,5 +38,4 @@ class RefreshTokenUseCase(
                 }
             DataResult.Error(authError)
         }
-    }
 }
