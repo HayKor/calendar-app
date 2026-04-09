@@ -2,16 +2,18 @@ package com.haykor.calendar.feature.auth.navigation
 
 import androidx.compose.runtime.Composable
 import androidx.navigation3.runtime.EntryProviderScope
-import androidx.navigation3.runtime.NavBackStack
-import androidx.navigation3.runtime.NavKey
+import com.haykor.calendar.core.navigation.NavDestination
 import com.haykor.calendar.feature.auth.presentation.SplashScreen
 
 @Composable
-fun EntryProviderScope<NavKey>.splashEntryProvider(backStack: NavBackStack<NavKey>) {
+fun EntryProviderScope<NavDestination>.splashEntryProvider(
+    onNavigateToAuth: () -> Unit,
+    onNavigateToMain: () -> Unit,
+) {
     entry<SplashDestination> {
         SplashScreen(
-            navigateToAuth = {}, // TODO:
-            navigateToMain = {},
+            onNavigateToAuth = onNavigateToAuth,
+            onNavigateToMain = onNavigateToMain,
         )
     }
 }

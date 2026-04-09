@@ -1,7 +1,7 @@
 package com.haykor.calendar.feature.auth.navigation
 
-import androidx.navigation3.runtime.NavKey
+import com.haykor.calendar.core.navigation.NavDestination
 import kotlinx.serialization.Serializable
 
 @Serializable
-data object SplashDestination : NavKey
+data object SplashDestination : NavDestination()

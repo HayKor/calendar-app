@@ -6,6 +6,7 @@ import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
 import com.haykor.calendar.core.di.appModule
 import com.haykor.calendar.core.di.authModule
+import com.haykor.calendar.core.navigation.RootScreen
 import com.haykor.calendar.core.ui.theme.AppTheme
 import org.koin.android.ext.koin.androidContext
 import org.koin.android.ext.koin.androidLogger
@@ -22,6 +23,7 @@ class MainActivity : ComponentActivity() {
         }
         setContent {
             AppTheme {
+                RootScreen()
             }
         }
     }
