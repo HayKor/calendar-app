@@ -1,4 +1,4 @@
-package com.haykor.calendar.ui.theme
+package com.haykor.calendar.core.ui.theme
 
 import androidx.compose.material3.Typography
 import androidx.compose.ui.text.font.Font
@@ -8,18 +8,18 @@ import com.haykor.calendar.R
 
 val bodyFontFamily =
     FontFamily(
-        Font(R.font.inter, weight = FontWeight.Normal),
-        Font(R.font.inter, weight = FontWeight.Medium),
-        Font(R.font.inter, weight = FontWeight.SemiBold),
-        Font(R.font.inter, weight = FontWeight.Bold),
+        Font(R.font.inter_18pt_regular, weight = FontWeight.Normal),
+        Font(R.font.inter_18pt_medium, weight = FontWeight.Medium),
+        Font(R.font.inter_18pt_semibold, weight = FontWeight.SemiBold),
+        Font(R.font.inter_18pt_bold, weight = FontWeight.Bold),
     )
 
 val displayFontFamily =
     FontFamily(
-        Font(R.font.manrope, weight = FontWeight.Normal),
-        Font(R.font.manrope, weight = FontWeight.Medium),
-        Font(R.font.manrope, weight = FontWeight.SemiBold),
-        Font(R.font.manrope, weight = FontWeight.Bold),
+        Font(R.font.manrope_regular, weight = FontWeight.Normal),
+        Font(R.font.manrope_medium, weight = FontWeight.Medium),
+        Font(R.font.manrope_semibold, weight = FontWeight.SemiBold),
+        Font(R.font.manrope_bold, weight = FontWeight.Bold),
     )
 
 // Default Material 3 typography values
