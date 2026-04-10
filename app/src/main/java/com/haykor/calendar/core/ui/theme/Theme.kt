@@ -116,11 +116,12 @@ fun AppTheme(
         }
 
     CompositionLocalProvider(
-        LocalSpacing provides Spacing()
+        LocalSpacing provides Spacing(),
     ) {
         MaterialExpressiveTheme(
             colorScheme = colorScheme,
             typography = AppTypography,
+            shapes = AppShapes,
             motionScheme = MotionScheme.expressive(),
             content = content,
         )
