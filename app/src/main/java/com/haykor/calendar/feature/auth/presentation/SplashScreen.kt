@@ -45,13 +45,8 @@ fun SplashScreen(
     LaunchedEffect(onNavigateToMain, onNavigateToOnboarding) {
         viewModel.event.collect { event ->
             when (event) {
-                is SplashScreenEvent.NavigateToMain -> {
-                    onNavigateToMain()
-                }
-
-                is SplashScreenEvent.NavigateToAuth -> {
-                    onNavigateToOnboarding()
-                }
+                SplashScreenEvent.NavigateToMain -> onNavigateToMain()
+                SplashScreenEvent.NavigateToAuth -> onNavigateToOnboarding()
             }
         }
     }

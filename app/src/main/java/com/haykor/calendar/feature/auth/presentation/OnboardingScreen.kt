@@ -18,7 +18,6 @@ import androidx.compose.ui.text.buildAnnotatedString
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.withStyle
 import androidx.compose.ui.tooling.preview.Preview
-import androidx.compose.ui.tooling.preview.PreviewScreenSizes
 import androidx.compose.ui.unit.dp
 import com.haykor.calendar.R
 import com.haykor.calendar.core.common.presentation.AppButton
@@ -58,7 +57,7 @@ private fun HeaderSection(modifier: Modifier = Modifier) {
     val spacing = LocalSpacing.current
 
     Column(
-        modifier = Modifier.fillMaxWidth(),
+        modifier = modifier.fillMaxWidth(),
         verticalArrangement = Arrangement.spacedBy(spacing.medium),
         horizontalAlignment = Alignment.CenterHorizontally,
     ) {
