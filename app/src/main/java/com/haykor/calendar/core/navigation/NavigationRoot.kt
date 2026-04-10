@@ -25,7 +25,12 @@ fun NavigationRoot(modifier: Modifier = Modifier) {
         entryProvider {
             entry<SplashDestination> {
                 SplashScreen(
-                    onNavigateToOnboarding = { rootBackstack.add(OnboardingDestination) },
+                    onNavigateToOnboarding = {
+                        rootBackstack.removeLastOrNull()
+                        rootBackstack.add(
+                            OnboardingDestination,
+                        )
+                    },
                     onNavigateToMain = { }, // TODO: navigate
                 )
             }

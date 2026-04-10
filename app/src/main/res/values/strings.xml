@@ -11,4 +11,6 @@
     <string name="try_again">Try Again</string>
     <string name="log_in">Log in</string>
     <string name="sign_up">Sign up</string>
+    <string name="welcome_to">"Welcome to "</string>
+    <string name="display_app_name">Calendar</string>
 </resources>
