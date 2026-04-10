@@ -36,13 +36,13 @@ private object SplashScreenDimensions {
 @Composable
 fun SplashScreen(
     onNavigateToMain: () -> Unit,
-    onNavigateToAuth: () -> Unit,
+    onNavigateToOnboarding: () -> Unit,
     modifier: Modifier = Modifier,
     viewModel: SplashScreenViewModel = koinViewModel(),
 ) {
     val state by viewModel.state.collectAsStateWithLifecycle()
 
-    LaunchedEffect(onNavigateToMain, onNavigateToAuth) {
+    LaunchedEffect(onNavigateToMain, onNavigateToOnboarding) {
         viewModel.event.collect { event ->
             when (event) {
                 is SplashScreenEvent.NavigateToMain -> {
@@ -50,7 +50,7 @@ fun SplashScreen(
                 }
 
                 is SplashScreenEvent.NavigateToAuth -> {
-                    onNavigateToAuth()
+                    onNavigateToOnboarding()
                 }
             }
         }
@@ -77,9 +77,7 @@ private fun SplashScreen(
         verticalArrangement = Arrangement.spacedBy(spacing.large, Alignment.CenterVertically),
         horizontalAlignment = Alignment.CenterHorizontally,
     ) {
-        Icon(
-            painter = painterResource(R.drawable.baseline_calendar_month_24),
-            contentDescription = stringResource(R.string.app_icon_description),
+        AppIcon(
             modifier = Modifier.size(SplashScreenDimensions.LogoSize),
         )
 
@@ -101,6 +99,15 @@ private fun SplashScreen(
             }
         }
     }
+}
+
+@Composable
+fun AppIcon(modifier: Modifier = Modifier) {
+    Icon(
+        painter = painterResource(R.drawable.baseline_calendar_month_24),
+        contentDescription = stringResource(R.string.app_icon_description),
+        modifier = modifier,
+    )
 }
 
 @PreviewLightDark
