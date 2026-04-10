@@ -9,6 +9,7 @@ import io.ktor.client.HttpClient
 import io.ktor.client.call.body
 import io.ktor.client.request.cookie
 import io.ktor.client.request.post
+import io.ktor.client.request.setBody
 import io.ktor.client.statement.HttpResponse
 import io.ktor.http.HttpStatusCode
 
@@ -20,6 +21,23 @@ class AuthServiceImpl(
             httpClient
                 .post("auth/refresh_tokens") {
                     cookie("refresh_token", refreshToken)
+                }
+
+        return when (response.status) {
+            HttpStatusCode.OK -> DataResult.Success(response.body<AuthResponse>().toDomain())
+            HttpStatusCode.Unauthorized -> DataResult.Error(AuthError.Unauthorized)
+            else -> DataResult.Error(AuthError.UnknownError)
+        }
+    }
+
+    override suspend fun login(
+        email: String,
+        password: String,
+    ): DataResult<Tokens, AuthError> {
+        val response: HttpResponse =
+            httpClient
+                .post("auth/login") {
+                    setBody(LoginRequest(email = email, password = password))
                 }
 
         return when (response.status) {

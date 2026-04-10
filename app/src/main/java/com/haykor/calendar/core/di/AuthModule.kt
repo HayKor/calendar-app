@@ -4,7 +4,9 @@ import com.haykor.calendar.feature.auth.data.AuthServiceImpl
 import com.haykor.calendar.feature.auth.domain.AuthService
 import com.haykor.calendar.feature.auth.domain.EnsureAuthenticatedUseCase
 import com.haykor.calendar.feature.auth.domain.GetAuthStatusUseCase
+import com.haykor.calendar.feature.auth.domain.LoginUseCase
 import com.haykor.calendar.feature.auth.domain.RefreshTokenUseCase
+import com.haykor.calendar.feature.auth.presentation.LoginViewModel
 import com.haykor.calendar.feature.auth.presentation.SplashScreenViewModel
 import org.koin.core.module.dsl.new
 import org.koin.core.module.dsl.viewModel
@@ -15,8 +17,10 @@ val authModule =
         single { new(::GetAuthStatusUseCase) }
         single { new(::RefreshTokenUseCase) }
         single { new(::EnsureAuthenticatedUseCase) }
+        single { new(::LoginUseCase) }
 
         single<AuthService> { new(::AuthServiceImpl) }
 
         viewModel { new(::SplashScreenViewModel) }
+        viewModel { new(::LoginViewModel) }
     }
