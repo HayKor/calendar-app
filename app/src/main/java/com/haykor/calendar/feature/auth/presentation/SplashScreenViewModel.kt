@@ -2,11 +2,10 @@ package com.haykor.calendar.feature.auth.presentation
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.haykor.calendar.R
 import com.haykor.calendar.core.common.domain.DataResult
-import com.haykor.calendar.core.common.presentation.UiText
 import com.haykor.calendar.feature.auth.domain.AuthError
 import com.haykor.calendar.feature.auth.domain.EnsureAuthenticatedUseCase
+import com.haykor.calendar.feature.auth.presentation.mapper.toUiText
 import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
@@ -67,15 +66,4 @@ class SplashScreenViewModel(
             }
         }
     }
-
-    private fun AuthError.toUiText(): UiText =
-        when (this) {
-            AuthError.NetworkError -> UiText.StringResource(R.string.error_network)
-
-            AuthError.UnknownError -> UiText.StringResource(R.string.error_unknown)
-
-            AuthError.SessionExpired,
-            AuthError.Unauthorized,
-            -> UiText.StringResource(R.string.error_session_expired)
-        }
 }

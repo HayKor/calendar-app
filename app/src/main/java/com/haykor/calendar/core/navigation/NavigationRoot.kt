@@ -1,5 +1,7 @@
 package com.haykor.calendar.core.navigation
 
+import androidx.compose.animation.core.EaseOutCubic
+import androidx.compose.animation.core.tween
 import androidx.compose.animation.fadeIn
 import androidx.compose.animation.fadeOut
 import androidx.compose.animation.slideInHorizontally
@@ -12,8 +14,10 @@ import androidx.lifecycle.viewmodel.navigation3.rememberViewModelStoreNavEntryDe
 import androidx.navigation3.runtime.entryProvider
 import androidx.navigation3.runtime.rememberSaveableStateHolderNavEntryDecorator
 import androidx.navigation3.ui.NavDisplay
+import com.haykor.calendar.feature.auth.navigation.LoginScreenDestination
 import com.haykor.calendar.feature.auth.navigation.OnboardingDestination
 import com.haykor.calendar.feature.auth.navigation.SplashDestination
+import com.haykor.calendar.feature.auth.presentation.LoginScreen
 import com.haykor.calendar.feature.auth.presentation.OnboardingScreen
 import com.haykor.calendar.feature.auth.presentation.SplashScreen
 
@@ -36,7 +40,18 @@ fun NavigationRoot(modifier: Modifier = Modifier) {
             }
             entry<OnboardingDestination> {
                 OnboardingScreen(
-                    onNavigateToLogin = {},
+                    onNavigateToLogin = {
+                        rootBackstack.removeLastOrNull()
+                        rootBackstack.add(
+                            LoginScreenDestination,
+                        )
+                    },
+                    onNavigateToSignup = {},
+                )
+            }
+            entry<LoginScreenDestination> {
+                LoginScreen(
+                    onLoginSuccess = {}, // TODO:
                     onNavigateToSignup = {},
                 )
             }
@@ -51,12 +66,20 @@ fun NavigationRoot(modifier: Modifier = Modifier) {
                 rememberViewModelStoreNavEntryDecorator(),
             ),
         transitionSpec = {
-            slideInHorizontally { it } + fadeIn() togetherWith
-                slideOutHorizontally { -it } + fadeOut()
+            slideInHorizontally(
+                animationSpec = tween(450, easing = EaseOutCubic),
+            ) { it } + fadeIn(tween(450, easing = EaseOutCubic)) togetherWith
+                slideOutHorizontally(
+                    animationSpec = tween(450, easing = EaseOutCubic),
+                ) { -it / 3 } + fadeOut(tween(450, easing = EaseOutCubic))
         },
         popTransitionSpec = {
-            slideInHorizontally { -it } + fadeIn() togetherWith
-                slideOutHorizontally { it } + fadeOut()
+            slideInHorizontally(
+                animationSpec = tween(450, easing = EaseOutCubic),
+            ) { -it / 3 } + fadeIn(tween(450, easing = EaseOutCubic)) togetherWith
+                slideOutHorizontally(
+                    animationSpec = tween(450, easing = EaseOutCubic),
+                ) { it } + fadeOut(tween(450, easing = EaseOutCubic))
         },
         modifier = modifier.fillMaxSize(),
     )

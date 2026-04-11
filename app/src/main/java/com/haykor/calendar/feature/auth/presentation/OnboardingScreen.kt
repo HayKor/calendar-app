@@ -1,6 +1,7 @@
 package com.haykor.calendar.feature.auth.presentation
 
 import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -21,6 +22,7 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.haykor.calendar.R
 import com.haykor.calendar.core.common.presentation.AppButton
+import com.haykor.calendar.core.common.presentation.AppIcon
 import com.haykor.calendar.core.ui.theme.AppTheme
 import com.haykor.calendar.core.ui.theme.LocalSpacing
 
@@ -36,19 +38,22 @@ fun OnboardingScreen(
 ) {
     val spacing = LocalSpacing.current
 
-    Column(
-        modifier =
-            modifier
-                .fillMaxSize()
-                .padding(spacing.medium),
-        verticalArrangement = Arrangement.spacedBy(spacing.large, Alignment.CenterVertically),
-        horizontalAlignment = Alignment.CenterHorizontally,
-    ) {
-        HeaderSection()
-        ButtonsSection(
-            onNavigateToLogin = onNavigateToLogin,
-            onNavigateToSignup = onNavigateToSignup,
-        )
+    Scaffold { paddingValues ->
+        Column(
+            modifier =
+                modifier
+                    .fillMaxSize()
+                    .padding(spacing.medium)
+                    .padding(paddingValues),
+            verticalArrangement = Arrangement.spacedBy(spacing.large, Alignment.CenterVertically),
+            horizontalAlignment = Alignment.CenterHorizontally,
+        ) {
+            HeaderSection()
+            ButtonsSection(
+                onNavigateToLogin = onNavigateToLogin,
+                onNavigateToSignup = onNavigateToSignup,
+            )
+        }
     }
 }
 

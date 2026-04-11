@@ -10,7 +10,6 @@ import androidx.compose.foundation.text.BasicTextField
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.foundation.text.input.KeyboardActionHandler
 import androidx.compose.foundation.text.input.OutputTransformation
-import androidx.compose.foundation.text.input.TextFieldBuffer
 import androidx.compose.foundation.text.input.TextFieldLineLimits
 import androidx.compose.foundation.text.input.TextFieldState
 import androidx.compose.material3.Icon
@@ -26,12 +25,13 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.SolidColor
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
-import androidx.compose.ui.text.input.VisualTransformation
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.haykor.calendar.R
+import com.haykor.calendar.core.common.presentation.util.PasswordOutputTransformation
 import com.haykor.calendar.core.ui.theme.AppTheme
 import com.haykor.calendar.core.ui.theme.LocalSpacing
 
@@ -43,6 +43,7 @@ fun AppOutlinedTextField(
     outputTransformation: OutputTransformation? = null,
     isError: Boolean = false,
     readOnly: Boolean = false,
+    enabled: Boolean = true,
     leadingIcon: @Composable (() -> Unit)? = null,
     trailingIcon: @Composable (() -> Unit)? = null,
     keyboardOptions: KeyboardOptions = KeyboardOptions.Default,
@@ -51,6 +52,14 @@ fun AppOutlinedTextField(
 ) {
     val spacing = LocalSpacing.current
     val interactionSource = interactionSource ?: remember { MutableInteractionSource() }
+
+    val textFieldColors =
+        OutlinedTextFieldDefaults.colors(
+            focusedContainerColor = MaterialTheme.colorScheme.surfaceContainer,
+            unfocusedContainerColor = MaterialTheme.colorScheme.surfaceContainer,
+            unfocusedBorderColor = MaterialTheme.colorScheme.outline,
+            cursorColor = MaterialTheme.colorScheme.primary,
+        )
 
     Column(
         modifier = modifier,
@@ -62,7 +71,6 @@ fun AppOutlinedTextField(
             style = MaterialTheme.typography.labelSmall,
         )
 
-//        OutlinedTextField()
         BasicTextField(
             state = state,
             readOnly = readOnly,
@@ -71,45 +79,34 @@ fun AppOutlinedTextField(
                 MaterialTheme.typography.bodyMedium.copy(
                     color = MaterialTheme.colorScheme.onSurface,
                 ),
+            cursorBrush = SolidColor(MaterialTheme.colorScheme.primary),
             lineLimits = TextFieldLineLimits.SingleLine,
             keyboardOptions = keyboardOptions,
             onKeyboardAction = onKeyboardAction,
             interactionSource = interactionSource,
             modifier = Modifier.fillMaxWidth(),
-            decorator = { innerTextField ->
-                OutlinedTextFieldDefaults.DecorationBox(
-                    value = state.text.toString(),
-                    innerTextField = innerTextField,
-                    enabled = true,
-                    singleLine = true,
-                    visualTransformation = VisualTransformation.None,
-                    interactionSource = remember { MutableInteractionSource() },
-                    isError = isError,
-                    trailingIcon = trailingIcon,
+            decorator =
+                OutlinedTextFieldDefaults.decorator(
+                    state = state,
+                    outputTransformation = outputTransformation,
+                    interactionSource = interactionSource,
                     leadingIcon = leadingIcon,
+                    trailingIcon = trailingIcon,
+                    isError = isError,
+                    enabled = enabled,
+                    colors = textFieldColors,
                     contentPadding = PaddingValues(horizontal = 14.dp, vertical = 12.5.dp),
-                    colors =
-                        OutlinedTextFieldDefaults.colors(
-                            focusedContainerColor = MaterialTheme.colorScheme.surfaceContainer,
-                            unfocusedContainerColor = MaterialTheme.colorScheme.surfaceContainer,
-                            unfocusedBorderColor = MaterialTheme.colorScheme.outline,
-                        ),
+                    lineLimits = TextFieldLineLimits.SingleLine,
                     container = {
                         OutlinedTextFieldDefaults.Container(
-                            enabled = true,
+                            enabled = enabled,
                             isError = isError,
-                            interactionSource = remember { MutableInteractionSource() },
+                            interactionSource = interactionSource,
                             shape = MaterialTheme.shapes.small,
-                            colors =
-                                OutlinedTextFieldDefaults.colors(
-                                    focusedContainerColor = MaterialTheme.colorScheme.surfaceContainer,
-                                    unfocusedContainerColor = MaterialTheme.colorScheme.surfaceContainer,
-                                    unfocusedBorderColor = MaterialTheme.colorScheme.outline,
-                                ),
+                            colors = textFieldColors,
                         )
                     },
-                )
-            },
+                ),
         )
     }
 }
@@ -204,13 +201,5 @@ private fun AppOutlinedTextFieldErrorPreview() {
                         .padding(10.dp),
             )
         }
-    }
-}
-
-class PasswordOutputTransformation(
-    private val mask: Char = '\u2022', // bullet
-) : OutputTransformation {
-    override fun TextFieldBuffer.transformOutput() {
-        replace(0, length, mask.toString().repeat(length))
     }
 }
