@@ -39,7 +39,12 @@ fun NavigationRoot(modifier: Modifier = Modifier) {
                             OnboardingDestination,
                         )
                     },
-                    onNavigateToMain = { }, // TODO: navigate
+                    onNavigateToMain = {
+                        rootBackstack.removeLastOrNull()
+                        rootBackstack.add(
+                            OnboardingDestination,
+                        )
+                    }, // TODO: navigate
                 )
             }
             entry<OnboardingDestination> {

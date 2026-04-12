@@ -70,7 +70,9 @@ fun LoginScreen(
         Toast.makeText(context, it.asString(), Toast.LENGTH_SHORT).show()
     }
 
-    Scaffold { paddingValues ->
+    Scaffold(
+        modifier = modifier.fillMaxSize(),
+    ) { paddingValues ->
         LoginScreen(
             state = state,
             onIntent = { intent ->
@@ -79,7 +81,7 @@ fun LoginScreen(
                     else -> viewModel.onIntent(intent)
                 }
             },
-            modifier = modifier.padding(paddingValues),
+            modifier = Modifier.padding(paddingValues),
         )
     }
 }
