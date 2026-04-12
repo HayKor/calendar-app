@@ -10,6 +10,8 @@ fun AuthError.toUiText(): UiText =
 
         AuthError.UnknownError -> UiText.StringResource(R.string.error_unknown)
 
+        AuthError.UserNotFound -> UiText.StringResource(R.string.user_not_found)
+
         AuthError.SessionExpired,
         AuthError.Unauthorized,
         -> UiText.StringResource(R.string.error_session_expired)

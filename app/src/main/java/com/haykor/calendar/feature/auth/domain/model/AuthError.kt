@@ -10,4 +10,6 @@ sealed interface AuthError : RootError {
     object Unauthorized : AuthError // HTTP 401
 
     object SessionExpired : AuthError
+
+    object UserNotFound : AuthError // HTTP 404
 }

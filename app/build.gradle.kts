@@ -13,7 +13,7 @@ fun getProp(
     default: String = "",
 ): String = System.getenv(envKey) ?: localProps.getProperty(key) ?: default
 
-val apiUrl = getProp("api.url", "API_URL")
+val devApiUrl = getProp("dev.api.url", "DEV_API_URL")
 
 plugins {
     alias(libs.plugins.android.application)
@@ -49,7 +49,7 @@ android {
             )
         }
         debug {
-            buildConfigField("String", "API_URL", "\"$apiUrl\"")
+            buildConfigField("String", "API_URL", "\"$devApiUrl\"")
             buildConfigField("boolean", "IS_DEBUG", "true")
         }
     }

@@ -1,5 +1,6 @@
 package com.haykor.calendar.feature.auth.data.service
 
+import androidx.compose.ui.autofill.ContentType
 import com.haykor.calendar.core.common.domain.DataResult
 import com.haykor.calendar.core.common.domain.Tokens
 import com.haykor.calendar.feature.auth.data.mapper.toDomain
@@ -14,6 +15,7 @@ import io.ktor.client.request.post
 import io.ktor.client.request.setBody
 import io.ktor.client.statement.HttpResponse
 import io.ktor.http.HttpStatusCode
+import io.ktor.http.contentType
 
 class AuthServiceImpl(
     private val httpClient: HttpClient,
@@ -43,8 +45,9 @@ class AuthServiceImpl(
                 }
 
         return when (response.status) {
-            HttpStatusCode.Companion.OK -> DataResult.Success(response.body<AuthResponse>().toDomain())
-            HttpStatusCode.Companion.Unauthorized -> DataResult.Error(AuthError.Unauthorized)
+            HttpStatusCode.OK -> DataResult.Success(response.body<AuthResponse>().toDomain())
+            HttpStatusCode.Unauthorized -> DataResult.Error(AuthError.Unauthorized)
+            HttpStatusCode.NotFound -> DataResult.Error(AuthError.UserNotFound)
             else -> DataResult.Error(AuthError.UnknownError)
         }
     }

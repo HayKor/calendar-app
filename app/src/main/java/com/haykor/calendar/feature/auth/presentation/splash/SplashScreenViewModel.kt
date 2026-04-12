@@ -46,6 +46,7 @@ class SplashScreenViewModel(
                     when (result.error) {
                         AuthError.SessionExpired,
                         AuthError.Unauthorized,
+                        AuthError.UserNotFound,
                         -> {
                             _state.update { it.copy(isLoading = false) }
                             _event.send(SplashScreenEvent.NavigateToAuth)

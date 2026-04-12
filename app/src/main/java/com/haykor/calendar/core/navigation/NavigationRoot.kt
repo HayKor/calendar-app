@@ -4,10 +4,14 @@ import androidx.compose.animation.core.EaseOutCubic
 import androidx.compose.animation.core.tween
 import androidx.compose.animation.fadeIn
 import androidx.compose.animation.fadeOut
+import androidx.compose.animation.scaleIn
+import androidx.compose.animation.scaleOut
 import androidx.compose.animation.slideInHorizontally
 import androidx.compose.animation.slideOutHorizontally
 import androidx.compose.animation.togetherWith
+import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.lifecycle.viewmodel.navigation3.rememberViewModelStoreNavEntryDecorator
@@ -67,20 +71,25 @@ fun NavigationRoot(modifier: Modifier = Modifier) {
             ),
         transitionSpec = {
             slideInHorizontally(
-                animationSpec = tween(450, easing = EaseOutCubic),
-            ) { it } + fadeIn(tween(450, easing = EaseOutCubic)) togetherWith
-                slideOutHorizontally(
+                animationSpec = tween(450, delayMillis = 30, easing = EaseOutCubic),
+            ) { it } togetherWith
+                scaleOut(
                     animationSpec = tween(450, easing = EaseOutCubic),
-                ) { -it / 3 } + fadeOut(tween(450, easing = EaseOutCubic))
+                    targetScale = 0.92f,
+                ) + fadeOut(tween(450, easing = EaseOutCubic))
         },
         popTransitionSpec = {
-            slideInHorizontally(
+            scaleIn(
                 animationSpec = tween(450, easing = EaseOutCubic),
-            ) { -it / 3 } + fadeIn(tween(450, easing = EaseOutCubic)) togetherWith
+                initialScale = 0.92f,
+            ) + fadeIn(tween(450, easing = EaseOutCubic)) togetherWith
                 slideOutHorizontally(
                     animationSpec = tween(450, easing = EaseOutCubic),
-                ) { it } + fadeOut(tween(450, easing = EaseOutCubic))
+                ) { it }
         },
-        modifier = modifier.fillMaxSize(),
+        modifier =
+            modifier
+                .fillMaxSize()
+                .background(MaterialTheme.colorScheme.background),
     )
 }

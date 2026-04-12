@@ -1,5 +1,6 @@
 package com.haykor.calendar.feature.auth.presentation.login
 
+import android.widget.Toast
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.layout.Arrangement
@@ -25,6 +26,7 @@ import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.SpanStyle
@@ -62,6 +64,11 @@ fun LoginScreen(
             }
         }
     }
+    val context = LocalContext.current
+
+    state.error?.let {
+        Toast.makeText(context, it.asString(), Toast.LENGTH_SHORT).show()
+    }
 
     Scaffold { paddingValues ->
         LoginScreen(
@@ -95,7 +102,9 @@ private fun LoginScreen(
         Spacer(Modifier.height(spacing.large))
         FormSection(emailState = state.email, passwordState = state.password)
         Spacer(Modifier.height(spacing.extraMedium))
-        LoginOptionsSection()
+        LoginOptionsSection(
+            onTryLogin = { onIntent(LoginScreenIntent.TryLogin) },
+        )
         Spacer(Modifier.weight(1f))
         SignUpPrompt(
             onSignUpClick = { onIntent(LoginScreenIntent.NavigateToSignup) },
@@ -180,14 +189,17 @@ private fun AppTitleWithIcon(modifier: Modifier = Modifier) {
 }
 
 @Composable
-private fun LoginOptionsSection(modifier: Modifier = Modifier) {
+private fun LoginOptionsSection(
+    onTryLogin: () -> Unit,
+    modifier: Modifier = Modifier,
+) {
     val spacing = LocalSpacing.current
 
     Column(
         modifier = modifier,
         verticalArrangement = Arrangement.spacedBy(spacing.extraMedium),
     ) {
-        AppButton(onClick = {}, modifier = Modifier.fillMaxWidth()) {
+        AppButton(onClick = onTryLogin, modifier = Modifier.fillMaxWidth()) {
             Text(
                 text = "Log in",
             )
