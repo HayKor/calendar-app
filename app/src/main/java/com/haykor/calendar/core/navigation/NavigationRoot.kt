@@ -14,12 +14,12 @@ import androidx.lifecycle.viewmodel.navigation3.rememberViewModelStoreNavEntryDe
 import androidx.navigation3.runtime.entryProvider
 import androidx.navigation3.runtime.rememberSaveableStateHolderNavEntryDecorator
 import androidx.navigation3.ui.NavDisplay
-import com.haykor.calendar.feature.auth.navigation.LoginScreenDestination
-import com.haykor.calendar.feature.auth.navigation.OnboardingDestination
-import com.haykor.calendar.feature.auth.navigation.SplashDestination
-import com.haykor.calendar.feature.auth.presentation.LoginScreen
-import com.haykor.calendar.feature.auth.presentation.OnboardingScreen
-import com.haykor.calendar.feature.auth.presentation.SplashScreen
+import com.haykor.calendar.feature.auth.presentation.login.LoginScreen
+import com.haykor.calendar.feature.auth.presentation.login.LoginScreenDestination
+import com.haykor.calendar.feature.auth.presentation.onboarding.OnboardingDestination
+import com.haykor.calendar.feature.auth.presentation.onboarding.OnboardingScreen
+import com.haykor.calendar.feature.auth.presentation.splash.SplashDestination
+import com.haykor.calendar.feature.auth.presentation.splash.SplashScreen
 
 @Composable
 fun NavigationRoot(modifier: Modifier = Modifier) {

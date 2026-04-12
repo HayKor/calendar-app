@@ -1,4 +1,4 @@
-package com.haykor.calendar.feature.auth.domain
+package com.haykor.calendar.feature.auth.domain.model
 
 sealed interface AuthStatus {
     object Authorized : AuthStatus

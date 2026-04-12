@@ -1,4 +1,4 @@
-package com.haykor.calendar.feature.auth.presentation
+package com.haykor.calendar.feature.auth.presentation.login
 
 import androidx.compose.foundation.text.input.TextFieldState
 import androidx.compose.runtime.Stable

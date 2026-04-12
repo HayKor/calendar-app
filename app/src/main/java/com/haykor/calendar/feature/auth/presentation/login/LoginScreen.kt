@@ -1,4 +1,4 @@
-package com.haykor.calendar.feature.auth.presentation
+package com.haykor.calendar.feature.auth.presentation.login
 
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.interaction.MutableInteractionSource

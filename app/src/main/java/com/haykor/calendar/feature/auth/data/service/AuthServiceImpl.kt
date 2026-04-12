@@ -1,10 +1,12 @@
-package com.haykor.calendar.feature.auth.data
+package com.haykor.calendar.feature.auth.data.service
 
 import com.haykor.calendar.core.common.domain.DataResult
 import com.haykor.calendar.core.common.domain.Tokens
 import com.haykor.calendar.feature.auth.data.mapper.toDomain
-import com.haykor.calendar.feature.auth.domain.AuthError
-import com.haykor.calendar.feature.auth.domain.AuthService
+import com.haykor.calendar.feature.auth.data.model.AuthResponse
+import com.haykor.calendar.feature.auth.data.model.LoginRequest
+import com.haykor.calendar.feature.auth.domain.model.AuthError
+import com.haykor.calendar.feature.auth.domain.service.AuthService
 import io.ktor.client.HttpClient
 import io.ktor.client.call.body
 import io.ktor.client.request.cookie
@@ -24,8 +26,8 @@ class AuthServiceImpl(
                 }
 
         return when (response.status) {
-            HttpStatusCode.OK -> DataResult.Success(response.body<AuthResponse>().toDomain())
-            HttpStatusCode.Unauthorized -> DataResult.Error(AuthError.Unauthorized)
+            HttpStatusCode.Companion.OK -> DataResult.Success(response.body<AuthResponse>().toDomain())
+            HttpStatusCode.Companion.Unauthorized -> DataResult.Error(AuthError.Unauthorized)
             else -> DataResult.Error(AuthError.UnknownError)
         }
     }
@@ -41,8 +43,8 @@ class AuthServiceImpl(
                 }
 
         return when (response.status) {
-            HttpStatusCode.OK -> DataResult.Success(response.body<AuthResponse>().toDomain())
-            HttpStatusCode.Unauthorized -> DataResult.Error(AuthError.Unauthorized)
+            HttpStatusCode.Companion.OK -> DataResult.Success(response.body<AuthResponse>().toDomain())
+            HttpStatusCode.Companion.Unauthorized -> DataResult.Error(AuthError.Unauthorized)
             else -> DataResult.Error(AuthError.UnknownError)
         }
     }

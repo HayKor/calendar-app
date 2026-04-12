@@ -1,9 +1,9 @@
-package com.haykor.calendar.feature.auth.presentation
+package com.haykor.calendar.feature.auth.presentation.login
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.haykor.calendar.core.common.domain.DataResult
-import com.haykor.calendar.feature.auth.domain.LoginUseCase
+import com.haykor.calendar.feature.auth.domain.usecase.LoginUseCase
 import com.haykor.calendar.feature.auth.presentation.mapper.toUiText
 import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.flow.MutableStateFlow

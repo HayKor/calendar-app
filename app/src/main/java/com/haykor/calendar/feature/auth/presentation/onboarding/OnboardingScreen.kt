@@ -1,7 +1,6 @@
-package com.haykor.calendar.feature.auth.presentation
+package com.haykor.calendar.feature.auth.presentation.onboarding
 
 import androidx.compose.foundation.layout.Arrangement
-import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -34,7 +33,7 @@ private object OnboardingScreenDimensions {
 fun OnboardingScreen(
     onNavigateToLogin: () -> Unit,
     onNavigateToSignup: () -> Unit,
-    modifier: Modifier = Modifier,
+    modifier: Modifier = Modifier.Companion,
 ) {
     val spacing = LocalSpacing.current
 
@@ -45,8 +44,12 @@ fun OnboardingScreen(
                     .fillMaxSize()
                     .padding(spacing.medium)
                     .padding(paddingValues),
-            verticalArrangement = Arrangement.spacedBy(spacing.large, Alignment.CenterVertically),
-            horizontalAlignment = Alignment.CenterHorizontally,
+            verticalArrangement =
+                Arrangement.spacedBy(
+                    spacing.large,
+                    Alignment.Companion.CenterVertically,
+                ),
+            horizontalAlignment = Alignment.Companion.CenterHorizontally,
         ) {
             HeaderSection()
             ButtonsSection(
@@ -58,22 +61,22 @@ fun OnboardingScreen(
 }
 
 @Composable
-private fun HeaderSection(modifier: Modifier = Modifier) {
+private fun HeaderSection(modifier: Modifier = Modifier.Companion) {
     val spacing = LocalSpacing.current
 
     Column(
         modifier = modifier.fillMaxWidth(),
         verticalArrangement = Arrangement.spacedBy(spacing.medium),
-        horizontalAlignment = Alignment.CenterHorizontally,
+        horizontalAlignment = Alignment.Companion.CenterHorizontally,
     ) {
         AppIcon(
-            modifier = Modifier.size(OnboardingScreenDimensions.LogoSize),
+            modifier = Modifier.Companion.size(OnboardingScreenDimensions.LogoSize),
         )
         Text(
             text =
                 buildAnnotatedString {
                     append(stringResource(R.string.welcome_to))
-                    withStyle(style = SpanStyle(fontWeight = FontWeight.Bold)) {
+                    withStyle(style = SpanStyle(fontWeight = FontWeight.Companion.Bold)) {
                         append(stringResource(R.string.display_app_name) + "!")
                     }
                 },
@@ -86,25 +89,25 @@ private fun HeaderSection(modifier: Modifier = Modifier) {
 private fun ButtonsSection(
     onNavigateToLogin: () -> Unit,
     onNavigateToSignup: () -> Unit,
-    modifier: Modifier = Modifier,
+    modifier: Modifier = Modifier.Companion,
 ) {
     val spacing = LocalSpacing.current
 
     Column(
         modifier = modifier.fillMaxWidth(),
         verticalArrangement = Arrangement.spacedBy(spacing.small),
-        horizontalAlignment = Alignment.CenterHorizontally,
+        horizontalAlignment = Alignment.Companion.CenterHorizontally,
     ) {
-        AppButton(onClick = onNavigateToLogin, modifier = Modifier.fillMaxWidth()) {
+        AppButton(onClick = onNavigateToLogin, modifier = Modifier.Companion.fillMaxWidth()) {
             Text(
                 text = stringResource(R.string.log_in),
-                fontWeight = FontWeight.Bold,
+                fontWeight = FontWeight.Companion.Bold,
             )
         }
-        AppButton(onClick = onNavigateToSignup, modifier = Modifier.fillMaxWidth()) {
+        AppButton(onClick = onNavigateToSignup, modifier = Modifier.Companion.fillMaxWidth()) {
             Text(
                 text = stringResource(R.string.sign_up),
-                fontWeight = FontWeight.Bold,
+                fontWeight = FontWeight.Companion.Bold,
             )
         }
     }
@@ -118,7 +121,7 @@ private fun OnboardingScreenPreview() {
             OnboardingScreen(
                 onNavigateToLogin = {},
                 onNavigateToSignup = {},
-                modifier = Modifier.padding(paddingValues),
+                modifier = Modifier.Companion.padding(paddingValues),
             )
         }
     }

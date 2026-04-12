@@ -1,7 +1,9 @@
-package com.haykor.calendar.feature.auth.domain
+package com.haykor.calendar.feature.auth.domain.usecase
 
 import com.haykor.calendar.core.common.domain.DataResult
 import com.haykor.calendar.core.common.domain.Tokens
+import com.haykor.calendar.feature.auth.domain.model.AuthError
+import com.haykor.calendar.feature.auth.domain.service.AuthService
 import okio.IOException
 import java.net.ConnectException
 import java.net.SocketTimeoutException
