@@ -6,6 +6,7 @@ import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
 import com.haykor.calendar.core.di.appModule
 import com.haykor.calendar.core.di.authModule
+import com.haykor.calendar.core.di.splashModule
 import com.haykor.calendar.core.navigation.NavigationRoot
 import com.haykor.calendar.core.ui.theme.AppTheme
 import org.koin.android.ext.koin.androidContext
@@ -19,7 +20,7 @@ class MainActivity : ComponentActivity() {
         startKoin {
             androidLogger()
             androidContext(this@MainActivity)
-            modules(appModule, authModule)
+            modules(appModule, splashModule, authModule)
         }
         setContent {
             AppTheme {

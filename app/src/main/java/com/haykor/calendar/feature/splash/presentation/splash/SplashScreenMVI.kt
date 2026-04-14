@@ -1,4 +1,4 @@
-package com.haykor.calendar.feature.auth.presentation.splash
+package com.haykor.calendar.feature.splash.presentation.splash
 
 import androidx.compose.runtime.Stable
 import com.haykor.calendar.core.common.presentation.UiText
