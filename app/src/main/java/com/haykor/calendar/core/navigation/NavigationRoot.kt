@@ -22,8 +22,8 @@ import com.haykor.calendar.feature.auth.presentation.login.LoginScreen
 import com.haykor.calendar.feature.auth.presentation.login.LoginScreenDestination
 import com.haykor.calendar.feature.auth.presentation.onboarding.OnboardingDestination
 import com.haykor.calendar.feature.auth.presentation.onboarding.OnboardingScreen
-import com.haykor.calendar.feature.auth.presentation.splash.SplashDestination
-import com.haykor.calendar.feature.auth.presentation.splash.SplashScreen
+import com.haykor.calendar.feature.splash.presentation.splash.SplashDestination
+import com.haykor.calendar.feature.splash.presentation.splash.SplashScreen
 
 @Composable
 fun NavigationRoot(modifier: Modifier = Modifier) {
