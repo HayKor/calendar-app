@@ -25,6 +25,7 @@ import com.haykor.calendar.core.ui.theme.AppTheme
 fun AppButton(
     onClick: () -> Unit,
     modifier: Modifier = Modifier,
+    enabled: Boolean = true,
     containerColor: Color = MaterialTheme.colorScheme.primary,
     contentColor: Color = contentColorFor(containerColor),
     content: @Composable RowScope.() -> Unit,
@@ -40,6 +41,7 @@ fun AppButton(
         interactionSource = interactionSource,
         shape = MaterialTheme.shapes.small,
         contentPadding = PaddingValues(vertical = 14.dp),
+        enabled = enabled,
         colors =
             ButtonDefaults.buttonColors().copy(
                 containerColor = containerColor,
@@ -55,11 +57,21 @@ fun AppButton(
     )
 }
 
-@Preview()
+@Preview(showBackground = true)
 @Composable
 private fun AppButtonPreview() {
     AppTheme {
         AppButton(onClick = {}, modifier = Modifier.fillMaxWidth()) {
+            Text("Example button")
+        }
+    }
+}
+
+@Preview(showBackground = true)
+@Composable
+private fun AppButtonDisabledPreview() {
+    AppTheme {
+        AppButton(onClick = {}, enabled = false, modifier = Modifier.fillMaxWidth()) {
             Text("Example button")
         }
     }

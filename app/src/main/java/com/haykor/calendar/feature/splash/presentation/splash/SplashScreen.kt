@@ -50,9 +50,14 @@ fun SplashScreen(
         }
     }
 
-    Scaffold { paddingValues ->
+    Scaffold(
+        modifier = modifier,
+    ) { paddingValues ->
         SplashScreen(
-            modifier = modifier.padding(paddingValues),
+            modifier =
+                Modifier
+                    .fillMaxSize()
+                    .padding(paddingValues),
             state = state,
             onIntent = viewModel::onIntent,
         )

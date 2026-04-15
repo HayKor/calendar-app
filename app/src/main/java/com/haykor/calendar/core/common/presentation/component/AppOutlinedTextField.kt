@@ -44,6 +44,7 @@ fun AppOutlinedTextField(
     isError: Boolean = false,
     readOnly: Boolean = false,
     enabled: Boolean = true,
+    caption: String? = null,
     leadingIcon: @Composable (() -> Unit)? = null,
     trailingIcon: @Composable (() -> Unit)? = null,
     keyboardOptions: KeyboardOptions = KeyboardOptions.Default,
@@ -97,6 +98,17 @@ fun AppOutlinedTextField(
                     colors = textFieldColors,
                     contentPadding = PaddingValues(horizontal = 14.dp, vertical = 12.5.dp),
                     lineLimits = TextFieldLineLimits.SingleLine,
+                    supportingText =
+                        if (caption != null) {
+                            {
+                                Text(
+                                    text = caption,
+                                    style = MaterialTheme.typography.bodySmall,
+                                )
+                            }
+                        } else {
+                            null
+                        },
                     container = {
                         OutlinedTextFieldDefaults.Container(
                             enabled = enabled,
@@ -118,6 +130,7 @@ fun AppOutlinedSecretTextField(
     modifier: Modifier = Modifier,
     isError: Boolean = false,
     readOnly: Boolean = false,
+    caption: String? = null,
     leadingIcon: @Composable (() -> Unit)? = null,
     keyboardOptions: KeyboardOptions = KeyboardOptions.Default,
     onKeyboardAction: KeyboardActionHandler? = null,
@@ -130,6 +143,7 @@ fun AppOutlinedSecretTextField(
         isError = isError,
         readOnly = readOnly,
         leadingIcon = leadingIcon,
+        caption = caption,
         trailingIcon = {
             IconButton(
                 onClick = { isPasswordVisible = !isPasswordVisible },
@@ -195,6 +209,7 @@ private fun AppOutlinedTextFieldErrorPreview() {
                 state = TextFieldState("zalupa@mail.ru"),
                 label = "Email",
                 isError = true,
+                caption = "Invalid email",
                 modifier =
                     Modifier
                         .fillMaxWidth()

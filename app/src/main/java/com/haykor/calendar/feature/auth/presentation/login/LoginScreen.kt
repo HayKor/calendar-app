@@ -14,8 +14,10 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.text.input.TextFieldState
+import androidx.compose.material3.ExperimentalMaterial3ExpressiveApi
 import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.Icon
+import androidx.compose.material3.LoadingIndicator
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
@@ -42,10 +44,14 @@ import com.haykor.calendar.core.common.presentation.component.AppOutlinedSecretT
 import com.haykor.calendar.core.common.presentation.component.AppOutlinedTextField
 import com.haykor.calendar.core.ui.theme.AppTheme
 import com.haykor.calendar.core.ui.theme.LocalSpacing
+import com.haykor.calendar.feature.auth.presentation.error.EmailError
+import com.haykor.calendar.feature.auth.presentation.error.PasswordError
+import com.haykor.calendar.feature.auth.presentation.mapper.toUiText
 import org.koin.androidx.compose.koinViewModel
 
 private object LoginScreenDimensions {
     val appLogoSize = 24.dp
+    val loadingIndicatorSize = 20.dp
 }
 
 @Composable
@@ -102,10 +108,17 @@ private fun LoginScreen(
     ) {
         HeaderSection()
         Spacer(Modifier.height(spacing.large))
-        FormSection(emailState = state.email, passwordState = state.password)
+        FormSection(
+            emailState = state.email,
+            emailError = state.emailError,
+            passwordState = state.password,
+            passwordError = state.passwordError,
+        )
         Spacer(Modifier.height(spacing.extraMedium))
         LoginOptionsSection(
             onTryLogin = { onIntent(LoginScreenIntent.TryLogin) },
+            promptsNotEmpty = state.email.text.isNotEmpty() && state.password.text.isNotEmpty(),
+            isLoading = state.isLoading,
         )
         Spacer(Modifier.weight(1f))
         SignUpPrompt(
@@ -151,7 +164,9 @@ private fun HeaderSection(modifier: Modifier = Modifier) {
 @Composable
 fun FormSection(
     emailState: TextFieldState,
+    emailError: EmailError?,
     passwordState: TextFieldState,
+    passwordError: PasswordError?,
     modifier: Modifier = Modifier,
 ) {
     val spacing = LocalSpacing.current
@@ -163,11 +178,15 @@ fun FormSection(
         AppOutlinedTextField(
             state = emailState,
             label = "Email",
+            isError = emailError != null,
+            caption = emailError?.toUiText()?.asString(),
             modifier = Modifier.fillMaxWidth(),
         )
         AppOutlinedSecretTextField(
             state = passwordState,
             label = "Password",
+            isError = passwordError != null,
+            caption = passwordError?.toUiText()?.asString(),
             modifier = Modifier.fillMaxWidth(),
         )
     }
@@ -190,9 +209,12 @@ private fun AppTitleWithIcon(modifier: Modifier = Modifier) {
     }
 }
 
+@OptIn(ExperimentalMaterial3ExpressiveApi::class)
 @Composable
 private fun LoginOptionsSection(
     onTryLogin: () -> Unit,
+    isLoading: Boolean,
+    promptsNotEmpty: Boolean,
     modifier: Modifier = Modifier,
 ) {
     val spacing = LocalSpacing.current
@@ -201,10 +223,18 @@ private fun LoginOptionsSection(
         modifier = modifier,
         verticalArrangement = Arrangement.spacedBy(spacing.extraMedium),
     ) {
-        AppButton(onClick = onTryLogin, modifier = Modifier.fillMaxWidth()) {
-            Text(
-                text = "Log in",
-            )
+        AppButton(
+            onClick = onTryLogin,
+            enabled = !isLoading && promptsNotEmpty,
+            modifier = Modifier.fillMaxWidth(),
+        ) {
+            if (isLoading) {
+                LoadingIndicator(modifier = Modifier.size(LoginScreenDimensions.loadingIndicatorSize))
+            } else {
+                Text(
+                    text = "Log in",
+                )
+            }
         }
         DividerWithText(text = "or")
         AppButton(
