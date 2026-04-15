@@ -6,7 +6,7 @@ import androidx.datastore.preferences.core.Preferences
 import androidx.datastore.preferences.core.edit
 import androidx.datastore.preferences.core.longPreferencesKey
 import androidx.datastore.preferences.core.stringPreferencesKey
-import com.haykor.calendar.core.common.domain.Tokens
+import com.haykor.calendar.core.common.domain.model.Tokens
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.map
 

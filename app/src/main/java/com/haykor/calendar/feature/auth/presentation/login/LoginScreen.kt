@@ -36,10 +36,10 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.haykor.calendar.R
-import com.haykor.calendar.core.common.presentation.AppButton
-import com.haykor.calendar.core.common.presentation.AppIcon
-import com.haykor.calendar.core.common.presentation.AppOutlinedSecretTextField
-import com.haykor.calendar.core.common.presentation.AppOutlinedTextField
+import com.haykor.calendar.core.common.presentation.component.AppButton
+import com.haykor.calendar.core.common.presentation.component.AppIcon
+import com.haykor.calendar.core.common.presentation.component.AppOutlinedSecretTextField
+import com.haykor.calendar.core.common.presentation.component.AppOutlinedTextField
 import com.haykor.calendar.core.ui.theme.AppTheme
 import com.haykor.calendar.core.ui.theme.LocalSpacing
 import org.koin.androidx.compose.koinViewModel

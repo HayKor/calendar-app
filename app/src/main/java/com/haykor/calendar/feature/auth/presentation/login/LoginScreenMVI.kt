@@ -2,7 +2,7 @@ package com.haykor.calendar.feature.auth.presentation.login
 
 import androidx.compose.foundation.text.input.TextFieldState
 import androidx.compose.runtime.Stable
-import com.haykor.calendar.core.common.presentation.UiText
+import com.haykor.calendar.core.common.presentation.model.UiText
 
 sealed interface LoginScreenEvent {
     data object NavigateToMain : LoginScreenEvent

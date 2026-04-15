@@ -1,4 +1,4 @@
-package com.haykor.calendar.core.common.presentation
+package com.haykor.calendar.core.common.presentation.model
 
 import androidx.annotation.StringRes
 import androidx.compose.runtime.Composable

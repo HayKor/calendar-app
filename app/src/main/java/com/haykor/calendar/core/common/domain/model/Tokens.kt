@@ -1,4 +1,4 @@
-package com.haykor.calendar.core.common.domain
+package com.haykor.calendar.core.common.domain.model
 
 data class Tokens(
     val accessToken: String,

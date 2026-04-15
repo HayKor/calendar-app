@@ -18,9 +18,8 @@ import androidx.lifecycle.viewmodel.navigation3.rememberViewModelStoreNavEntryDe
 import androidx.navigation3.runtime.entryProvider
 import androidx.navigation3.runtime.rememberSaveableStateHolderNavEntryDecorator
 import androidx.navigation3.ui.NavDisplay
+import com.haykor.calendar.feature.auth.AuthDestination
 import com.haykor.calendar.feature.auth.presentation.login.LoginScreen
-import com.haykor.calendar.feature.auth.presentation.login.LoginScreenDestination
-import com.haykor.calendar.feature.auth.presentation.onboarding.OnboardingDestination
 import com.haykor.calendar.feature.auth.presentation.onboarding.OnboardingScreen
 import com.haykor.calendar.feature.splash.presentation.splash.SplashDestination
 import com.haykor.calendar.feature.splash.presentation.splash.SplashScreen
@@ -36,29 +35,29 @@ fun NavigationRoot(modifier: Modifier = Modifier) {
                     onNavigateToOnboarding = {
                         rootBackstack.removeLastOrNull()
                         rootBackstack.add(
-                            OnboardingDestination,
+                            AuthDestination.Onboarding,
                         )
                     },
                     onNavigateToMain = {
                         rootBackstack.removeLastOrNull()
                         rootBackstack.add(
-                            OnboardingDestination,
+                            AuthDestination.Onboarding,
                         )
-                    }, // TODO: navigate
+                    }, // TODO: navigate to main
                 )
             }
-            entry<OnboardingDestination> {
+            entry<AuthDestination.Onboarding> {
                 OnboardingScreen(
                     onNavigateToLogin = {
                         rootBackstack.removeLastOrNull()
                         rootBackstack.add(
-                            LoginScreenDestination,
+                            AuthDestination.Login,
                         )
                     },
                     onNavigateToSignup = {},
                 )
             }
-            entry<LoginScreenDestination> {
+            entry<AuthDestination.Login> {
                 LoginScreen(
                     onLoginSuccess = {}, // TODO:
                     onNavigateToSignup = {},

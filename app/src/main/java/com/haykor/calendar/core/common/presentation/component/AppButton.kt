@@ -1,4 +1,4 @@
-package com.haykor.calendar.core.common.presentation
+package com.haykor.calendar.core.common.presentation.component
 
 import androidx.compose.animation.core.animateFloatAsState
 import androidx.compose.foundation.interaction.MutableInteractionSource

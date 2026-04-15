@@ -6,10 +6,8 @@ import androidx.navigation3.runtime.NavBackStack
 import androidx.navigation3.runtime.NavKey
 import androidx.navigation3.runtime.serialization.NavBackStackSerializer
 import androidx.navigation3.runtime.serialization.NavKeySerializer
-import kotlinx.serialization.Serializable
 
-@Serializable
-open class NavDestination : NavKey
+interface NavDestination : NavKey
 
 @Composable
 fun <T : NavKey> rememberNavBackStack(vararg elements: T): NavBackStack<T> =

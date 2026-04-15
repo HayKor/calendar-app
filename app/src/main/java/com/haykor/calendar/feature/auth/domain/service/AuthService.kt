@@ -1,7 +1,7 @@
 package com.haykor.calendar.feature.auth.domain.service
 
-import com.haykor.calendar.core.common.domain.DataResult
-import com.haykor.calendar.core.common.domain.Tokens
+import com.haykor.calendar.core.common.domain.model.DataResult
+import com.haykor.calendar.core.common.domain.model.Tokens
 import com.haykor.calendar.feature.auth.domain.model.AuthError
 
 interface AuthService {

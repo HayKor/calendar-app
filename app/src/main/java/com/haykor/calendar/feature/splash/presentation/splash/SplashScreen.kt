@@ -21,8 +21,8 @@ import androidx.compose.ui.tooling.preview.PreviewLightDark
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.haykor.calendar.R
-import com.haykor.calendar.core.common.presentation.AppIcon
-import com.haykor.calendar.core.common.presentation.UiText
+import com.haykor.calendar.core.common.presentation.component.AppIcon
+import com.haykor.calendar.core.common.presentation.model.UiText
 import com.haykor.calendar.core.ui.theme.AppTheme
 import com.haykor.calendar.core.ui.theme.LocalSpacing
 import org.koin.compose.viewmodel.koinViewModel

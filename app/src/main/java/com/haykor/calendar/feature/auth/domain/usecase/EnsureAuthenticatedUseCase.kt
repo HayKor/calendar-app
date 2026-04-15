@@ -1,7 +1,7 @@
 package com.haykor.calendar.feature.auth.domain.usecase
 
-import com.haykor.calendar.core.common.domain.DataResult
-import com.haykor.calendar.core.common.domain.flatMap
+import com.haykor.calendar.core.common.domain.model.DataResult
+import com.haykor.calendar.core.common.domain.model.flatMap
 import com.haykor.calendar.feature.auth.domain.model.AuthError
 import com.haykor.calendar.feature.auth.domain.model.AuthStatus
 

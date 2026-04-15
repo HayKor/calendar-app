@@ -20,8 +20,8 @@ import androidx.compose.ui.text.withStyle
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.haykor.calendar.R
-import com.haykor.calendar.core.common.presentation.AppButton
-import com.haykor.calendar.core.common.presentation.AppIcon
+import com.haykor.calendar.core.common.presentation.component.AppButton
+import com.haykor.calendar.core.common.presentation.component.AppIcon
 import com.haykor.calendar.core.ui.theme.AppTheme
 import com.haykor.calendar.core.ui.theme.LocalSpacing
 

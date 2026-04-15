@@ -1,8 +1,7 @@
 package com.haykor.calendar.feature.auth.data.service
 
-import androidx.compose.ui.autofill.ContentType
-import com.haykor.calendar.core.common.domain.DataResult
-import com.haykor.calendar.core.common.domain.Tokens
+import com.haykor.calendar.core.common.domain.model.DataResult
+import com.haykor.calendar.core.common.domain.model.Tokens
 import com.haykor.calendar.feature.auth.data.mapper.toDomain
 import com.haykor.calendar.feature.auth.data.model.AuthResponse
 import com.haykor.calendar.feature.auth.data.model.LoginRequest
@@ -15,7 +14,6 @@ import io.ktor.client.request.post
 import io.ktor.client.request.setBody
 import io.ktor.client.statement.HttpResponse
 import io.ktor.http.HttpStatusCode
-import io.ktor.http.contentType
 
 class AuthServiceImpl(
     private val httpClient: HttpClient,
