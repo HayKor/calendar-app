@@ -19,43 +19,58 @@ class TokenManager(
         val ACCESS_TOKEN_EXPIRY = longPreferencesKey("access_token_expiry")
         val REFRESH_TOKEN_EXPIRY = longPreferencesKey("refresh_token_expiry")
 
-        const val ACCESS_TOKEN_BUFFER_MS = 60_000L // refresh 1 minute before actual expiry
+        const val ACCESS_TOKEN_BUFFER_MS = 60_000L
+        const val TAG = "TokenManager"
     }
 
     suspend fun saveTokens(tokens: Tokens) {
+        Log.d(TAG, "Saving tokens — accessExpiresIn=${tokens.accessTokenExpiresIn}ms, refreshExpiresIn=${tokens.refreshTokenExpiresIn}ms")
         dataStore.edit { preferences ->
             preferences[ACCESS_TOKEN] = tokens.accessToken
             preferences[REFRESH_TOKEN] = tokens.refreshToken
-            preferences[ACCESS_TOKEN_EXPIRY] =
-                System.currentTimeMillis() + tokens.accessTokenExpiresIn
-            preferences[REFRESH_TOKEN_EXPIRY] =
-                System.currentTimeMillis() + tokens.refreshTokenExpiresIn
+            preferences[ACCESS_TOKEN_EXPIRY] = System.currentTimeMillis() + tokens.accessTokenExpiresIn
+            preferences[REFRESH_TOKEN_EXPIRY] = System.currentTimeMillis() + tokens.refreshTokenExpiresIn
         }
+        Log.d(TAG, "Tokens saved successfully")
     }
 
-    suspend fun getAccessToken(): String? = dataStore.data.map { it[ACCESS_TOKEN] }.first()
+    suspend fun getAccessToken(): String? =
+        dataStore.data.map { it[ACCESS_TOKEN] }.first().also { token ->
+            Log.d(TAG, "getAccessToken — ${if (token != null) "found" else "not found"}")
+        }
 
-    suspend fun getRefreshToken(): String? = dataStore.data.map { it[REFRESH_TOKEN] }.first()
+    suspend fun getRefreshToken(): String? =
+        dataStore.data.map { it[REFRESH_TOKEN] }.first().also { token ->
+            Log.d(TAG, "getRefreshToken — ${if (token != null) "found" else "not found"}")
+        }
 
     suspend fun isAccessTokenExpired(): Boolean {
+        val now = System.currentTimeMillis()
         val expiry = dataStore.data.map { it[ACCESS_TOKEN_EXPIRY] ?: 0L }.first()
-        Log.d("tokens", "expiryAccess=$expiry currentTime=${System.currentTimeMillis()}")
-        return System.currentTimeMillis() >= expiry - ACCESS_TOKEN_BUFFER_MS
+        val isExpired = now >= expiry - ACCESS_TOKEN_BUFFER_MS
+        Log.d(
+            TAG,
+            "isAccessTokenExpired=$isExpired — now=$now, expiry=$expiry, buffer=$ACCESS_TOKEN_BUFFER_MS, remainingMs=${expiry - now}",
+        )
+        return isExpired
     }
 
     suspend fun isRefreshTokenExpired(): Boolean {
-        val expiry =
-            dataStore.data.map { it[REFRESH_TOKEN_EXPIRY] ?: 0L }.first()
-        Log.d("tokens", "expiryRefresh=$expiry currentTime=${System.currentTimeMillis()}")
-        return System.currentTimeMillis() >= expiry
+        val now = System.currentTimeMillis()
+        val expiry = dataStore.data.map { it[REFRESH_TOKEN_EXPIRY] ?: 0L }.first()
+        val isExpired = now >= expiry
+        Log.d(TAG, "isRefreshTokenExpired=$isExpired — now=$now, expiry=$expiry, remainingMs=${expiry - now}")
+        return isExpired
     }
 
     suspend fun clearTokens() {
+        Log.d(TAG, "Clearing all tokens")
         dataStore.edit { preferences ->
             preferences.remove(ACCESS_TOKEN)
             preferences.remove(REFRESH_TOKEN)
             preferences.remove(ACCESS_TOKEN_EXPIRY)
             preferences.remove(REFRESH_TOKEN_EXPIRY)
         }
+        Log.d(TAG, "Tokens cleared")
     }
 }
