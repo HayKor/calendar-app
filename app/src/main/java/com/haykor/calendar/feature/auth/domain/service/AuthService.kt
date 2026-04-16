@@ -11,4 +11,6 @@ interface AuthService {
         email: String,
         password: String,
     ): DataResult<Tokens, AuthError>
+
+    suspend fun signInWithGoogle(idToken: String): DataResult<Tokens, AuthError>
 }

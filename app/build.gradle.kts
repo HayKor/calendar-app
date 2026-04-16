@@ -14,6 +14,7 @@ fun getProp(
 ): String = System.getenv(envKey) ?: localProps.getProperty(key) ?: default
 
 val devApiUrl = getProp("dev.api.url", "DEV_API_URL")
+val devGoogleWebClientId = getProp("dev.google_web_client_id", "GOOGLE_WEB_CLIENT_ID")
 
 plugins {
     alias(libs.plugins.android.application)
@@ -50,6 +51,7 @@ android {
         }
         debug {
             buildConfigField("String", "API_URL", "\"$devApiUrl\"")
+            buildConfigField("String", "GOOGLE_WEB_CLIENT_ID", "\"$devGoogleWebClientId\"")
             buildConfigField("boolean", "IS_DEBUG", "true")
         }
     }
@@ -83,6 +85,11 @@ dependencies {
     implementation(libs.androidx.lifecycle.runtime.ktx)
     implementation(libs.androidx.lifecycle.viewmodel.navigation3)
     implementation(libs.androidx.activity.compose)
+
+    // Credentials
+    implementation(libs.androidx.credentials)
+    implementation(libs.androidx.credentials.playservices)
+    implementation(libs.google.identity.googleid)
 
     // UI
     implementation(platform(libs.androidx.compose.bom))

@@ -4,6 +4,7 @@ import com.haykor.calendar.core.common.domain.model.DataResult
 import com.haykor.calendar.core.common.domain.model.Tokens
 import com.haykor.calendar.feature.auth.data.mapper.toDomain
 import com.haykor.calendar.feature.auth.data.model.AuthResponse
+import com.haykor.calendar.feature.auth.data.model.GoogleIdTokenRequest
 import com.haykor.calendar.feature.auth.data.model.LoginRequest
 import com.haykor.calendar.feature.auth.domain.model.AuthError
 import com.haykor.calendar.feature.auth.domain.service.AuthService
@@ -26,8 +27,8 @@ class AuthServiceImpl(
                 }
 
         return when (response.status) {
-            HttpStatusCode.Companion.OK -> DataResult.Success(response.body<AuthResponse>().toDomain())
-            HttpStatusCode.Companion.Unauthorized -> DataResult.Error(AuthError.Unauthorized)
+            HttpStatusCode.OK -> DataResult.Success(response.body<AuthResponse>().toDomain())
+            HttpStatusCode.Unauthorized -> DataResult.Error(AuthError.Unauthorized)
             else -> DataResult.Error(AuthError.UnknownError)
         }
     }
@@ -41,6 +42,20 @@ class AuthServiceImpl(
                 .post("auth/login") {
                     setBody(LoginRequest(email = email, password = password))
                 }
+
+        return when (response.status) {
+            HttpStatusCode.OK -> DataResult.Success(response.body<AuthResponse>().toDomain())
+            HttpStatusCode.Unauthorized -> DataResult.Error(AuthError.Unauthorized)
+            HttpStatusCode.NotFound -> DataResult.Error(AuthError.UserNotFound)
+            else -> DataResult.Error(AuthError.UnknownError)
+        }
+    }
+
+    override suspend fun signInWithGoogle(idToken: String): DataResult<Tokens, AuthError> {
+        val response: HttpResponse =
+            httpClient.post("auth/login/google/mobile") {
+                setBody(GoogleIdTokenRequest(idToken))
+            }
 
         return when (response.status) {
             HttpStatusCode.OK -> DataResult.Success(response.body<AuthResponse>().toDomain())

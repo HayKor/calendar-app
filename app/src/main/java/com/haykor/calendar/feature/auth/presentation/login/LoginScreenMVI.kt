@@ -13,6 +13,10 @@ sealed interface LoginScreenEvent {
 sealed interface LoginScreenIntent {
     data object TryLogin : LoginScreenIntent
 
+    data class TryGoogleSignIn(
+        val idToken: String,
+    ) : LoginScreenIntent
+
     data object NavigateToSignup : LoginScreenIntent
 }
 

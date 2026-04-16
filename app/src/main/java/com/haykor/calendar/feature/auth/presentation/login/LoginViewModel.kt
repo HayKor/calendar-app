@@ -1,9 +1,13 @@
 package com.haykor.calendar.feature.auth.presentation.login
 
+import androidx.credentials.GetCredentialRequest
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.google.android.libraries.identity.googleid.GetGoogleIdOption
+import com.haykor.calendar.BuildConfig
 import com.haykor.calendar.core.common.domain.model.DataResult
 import com.haykor.calendar.feature.auth.domain.model.AuthError
+import com.haykor.calendar.feature.auth.domain.usecase.GoogleLoginUseCase
 import com.haykor.calendar.feature.auth.domain.usecase.LoginUseCase
 import com.haykor.calendar.feature.auth.presentation.mapper.toUiText
 import com.haykor.calendar.feature.auth.presentation.validation.EmailValidator
@@ -17,6 +21,7 @@ import kotlinx.coroutines.launch
 
 class LoginViewModel(
     private val loginUseCase: LoginUseCase,
+    private val googleLoginUseCase: GoogleLoginUseCase,
     private val emailValidator: EmailValidator,
 ) : ViewModel() {
     private val _state = MutableStateFlow(LoginState())
@@ -25,10 +30,25 @@ class LoginViewModel(
     private val _event = Channel<LoginScreenEvent>()
     val event = _event.receiveAsFlow()
 
+    val googleSignInRequest =
+        GetCredentialRequest
+            .Builder()
+            .addCredentialOption(
+                GetGoogleIdOption
+                    .Builder()
+                    .setFilterByAuthorizedAccounts(false)
+                    .setServerClientId(BuildConfig.GOOGLE_WEB_CLIENT_ID)
+                    .build(),
+            ).build()
+
     fun onIntent(intent: LoginScreenIntent) {
         when (intent) {
             LoginScreenIntent.TryLogin -> {
                 tryLogin()
+            }
+
+            is LoginScreenIntent.TryGoogleSignIn -> {
+                tryGoogleSignIn(intent.idToken)
             }
 
             else -> {}
@@ -53,6 +73,19 @@ class LoginViewModel(
             if (emailError != null || passwordError != null) return@launch
 
             performLogin()
+        }
+
+    private fun tryGoogleSignIn(idToken: String) =
+        viewModelScope.launch {
+            when (val result = googleLoginUseCase(idToken = idToken)) {
+                is DataResult.Error -> {
+                    handleLoginError(result.error)
+                }
+
+                is DataResult.Success -> {
+                    handleLoginSuccess()
+                }
+            }
         }
 
     private suspend fun performLogin() {

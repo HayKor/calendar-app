@@ -1,5 +1,6 @@
 package com.haykor.calendar.feature.auth.presentation.login
 
+import android.util.Log
 import android.widget.Toast
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.interaction.MutableInteractionSource
@@ -25,6 +26,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
@@ -34,19 +36,24 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.SpanStyle
 import androidx.compose.ui.text.buildAnnotatedString
 import androidx.compose.ui.text.withStyle
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import androidx.credentials.CredentialManager
+import androidx.credentials.CustomCredential
+import androidx.credentials.GetCredentialRequest
+import androidx.credentials.exceptions.GetCredentialCancellationException
+import androidx.credentials.exceptions.GetCredentialException
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import com.google.android.libraries.identity.googleid.GoogleIdTokenCredential
 import com.haykor.calendar.R
 import com.haykor.calendar.core.common.presentation.component.AppButton
 import com.haykor.calendar.core.common.presentation.component.AppIcon
 import com.haykor.calendar.core.common.presentation.component.AppOutlinedSecretTextField
 import com.haykor.calendar.core.common.presentation.component.AppOutlinedTextField
-import com.haykor.calendar.core.ui.theme.AppTheme
 import com.haykor.calendar.core.ui.theme.LocalSpacing
 import com.haykor.calendar.feature.auth.presentation.error.EmailError
 import com.haykor.calendar.feature.auth.presentation.error.PasswordError
 import com.haykor.calendar.feature.auth.presentation.mapper.toUiText
+import kotlinx.coroutines.launch
 import org.koin.androidx.compose.koinViewModel
 
 private object LoginScreenDimensions {
@@ -81,6 +88,7 @@ fun LoginScreen(
     ) { paddingValues ->
         LoginScreen(
             state = state,
+            googleSignInRequest = viewModel.googleSignInRequest,
             onIntent = { intent ->
                 when (intent) {
                     is LoginScreenIntent.NavigateToSignup -> onNavigateToSignup()
@@ -95,6 +103,7 @@ fun LoginScreen(
 @Composable
 private fun LoginScreen(
     state: LoginState,
+    googleSignInRequest: GetCredentialRequest,
     onIntent: (LoginScreenIntent) -> Unit,
     modifier: Modifier = Modifier,
 ) {
@@ -117,6 +126,8 @@ private fun LoginScreen(
         Spacer(Modifier.height(spacing.extraMedium))
         LoginOptionsSection(
             onTryLogin = { onIntent(LoginScreenIntent.TryLogin) },
+            onTryGoogleSignIn = { idToken -> onIntent(LoginScreenIntent.TryGoogleSignIn(idToken)) },
+            googleSignInRequest = googleSignInRequest,
             promptsNotEmpty = state.email.text.isNotEmpty() && state.password.text.isNotEmpty(),
             isLoading = state.isLoading,
         )
@@ -213,6 +224,8 @@ private fun AppTitleWithIcon(modifier: Modifier = Modifier) {
 @Composable
 private fun LoginOptionsSection(
     onTryLogin: () -> Unit,
+    onTryGoogleSignIn: (idToken: String) -> Unit,
+    googleSignInRequest: GetCredentialRequest,
     isLoading: Boolean,
     promptsNotEmpty: Boolean,
     modifier: Modifier = Modifier,
@@ -237,25 +250,78 @@ private fun LoginOptionsSection(
             }
         }
         DividerWithText(text = "or")
-        AppButton(
-            onClick = {},
-            containerColor = MaterialTheme.colorScheme.surfaceContainer,
+        GoogleSignInButton(
+            onTryGoogleSignIn = onTryGoogleSignIn,
+            googleSignInRequest = googleSignInRequest,
             modifier = Modifier.fillMaxWidth(),
-        ) {
-            Row(
-                verticalAlignment = Alignment.CenterVertically,
-                horizontalArrangement = Arrangement.spacedBy(spacing.small),
-            ) {
-                Icon(
-                    painterResource(R.drawable.google_24dp),
-                    contentDescription = "Google logo",
-                    tint = Color.Unspecified,
-                )
-                Text(
-                    text = "Continue with Google",
-                    style = MaterialTheme.typography.bodyLarge,
-                )
+        )
+    }
+}
+
+@Composable
+private fun GoogleSignInButton(
+    googleSignInRequest: GetCredentialRequest,
+    onTryGoogleSignIn: (idToken: String) -> Unit,
+    modifier: Modifier = Modifier,
+) {
+    val context = LocalContext.current
+    val spacing = LocalSpacing.current
+
+    val credentialManager = remember { CredentialManager.create(context) }
+    val googleSignInRequest = remember { googleSignInRequest }
+    val coroutineScope = rememberCoroutineScope()
+
+    AppButton(
+        onClick = {
+            coroutineScope.launch {
+                Log.d("GoogleSignIn", "Credential request started")
+                try {
+                    val result = credentialManager.getCredential(context, googleSignInRequest)
+                    val credential = result.credential
+                    if (credential is CustomCredential && credential.type == GoogleIdTokenCredential.TYPE_GOOGLE_ID_TOKEN_CREDENTIAL) {
+                        val googleIdTokenCredential =
+                            GoogleIdTokenCredential.createFrom(credential.data)
+                        Log.d("GoogleSignIn", "Credential obtained successfully, firing use case")
+                        onTryGoogleSignIn(googleIdTokenCredential.idToken)
+                    } else {
+                        Log.e(
+                            "GoogleSignIn",
+                            "Unexpected credential type=${credential::class.simpleName}",
+                        )
+                    }
+                } catch (e: GetCredentialCancellationException) {
+                    Log.d("GoogleSignIn", "User cancelled the credential picker")
+                } catch (e: GetCredentialException) {
+                    Log.e(
+                        "GoogleSignIn",
+                        "GetCredentialException — type=${e::class.simpleName}, message=${e.message}",
+                        e,
+                    )
+                } catch (e: Exception) {
+                    Log.e(
+                        "GoogleSignIn",
+                        "Unexpected exception — type=${e::class.simpleName}, message=${e.message}",
+                        e,
+                    )
+                }
             }
+        },
+        containerColor = MaterialTheme.colorScheme.surfaceContainer,
+        modifier = modifier,
+    ) {
+        Row(
+            verticalAlignment = Alignment.CenterVertically,
+            horizontalArrangement = Arrangement.spacedBy(spacing.small),
+        ) {
+            Icon(
+                painterResource(R.drawable.google_24dp),
+                contentDescription = "Google logo",
+                tint = Color.Unspecified,
+            )
+            Text(
+                text = "Continue with Google",
+                style = MaterialTheme.typography.bodyLarge,
+            )
         }
     }
 }
@@ -317,16 +383,17 @@ private fun SignUpPrompt(
     }
 }
 
-@Preview(showSystemUi = true)
-@Composable
-private fun LoginScreenPreview() {
-    AppTheme {
-        Scaffold { paddingValues ->
-            LoginScreen(
-                state = LoginState(),
-                onIntent = {},
-                modifier = Modifier.padding(paddingValues),
-            )
-        }
-    }
-}
+// @Preview(showSystemUi = true)
+// @Composable
+// private fun LoginScreenPreview() {
+//    AppTheme {
+//        Scaffold { paddingValues ->
+//            LoginScreen(
+//                state = LoginState(),
+//                googleSignInRequest = GetCredentialRequest.getDefaultRequest(),
+//                onIntent = {},
+//                modifier = Modifier.padding(paddingValues),
+//            )
+//        }
+//    }
+// }
