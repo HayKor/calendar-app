@@ -22,4 +22,7 @@
     <string name="password_cannot_be_empty">Password cannot be empty</string>
     <string name="invalid_password">Password should contain only [A-z, 1-9]</string>
     <string name="too_short_password">Password should be at least 6 characters long</string>
+    <string name="google_sign_in_succeeded">Google sign-in succeeded</string>
+    <string name="google_sign_in_failed">Google sign-in failed</string>
+    <string name="google_sign_in_cancelled">Google sign-in cancelled</string>
 </resources>
