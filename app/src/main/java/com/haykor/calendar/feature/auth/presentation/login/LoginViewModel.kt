@@ -3,7 +3,7 @@ package com.haykor.calendar.feature.auth.presentation.login
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.haykor.calendar.core.common.domain.model.DataResult
-import com.haykor.calendar.feature.auth.domain.model.AuthError
+import com.haykor.calendar.core.common.presentation.model.UiText
 import com.haykor.calendar.feature.auth.domain.model.GoogleSignInResult
 import com.haykor.calendar.feature.auth.domain.service.GoogleSignInClient
 import com.haykor.calendar.feature.auth.domain.usecase.GoogleLoginUseCase
@@ -66,26 +66,25 @@ class LoginViewModel(
 
     private fun tryGoogleSignIn() =
         viewModelScope.launch {
-            _state.update { it.copy(isLoading = false, error = null) }
+            _state.update { it.copy(isLoading = true) }
             when (val signInResult = googleSignInClient.signIn()) {
                 is GoogleSignInResult.Success -> {
                     when (val result = googleLoginUseCase(signInResult.idToken)) {
-                        is DataResult.Error -> handleLoginError(result.error)
-                        is DataResult.Success -> handleLoginSuccess()
+                        is DataResult.Error -> handleError(result.error.toUiText())
+                        is DataResult.Success -> handleSuccess()
                     }
                 }
 
                 GoogleSignInResult.Failure,
                 GoogleSignInResult.Cancelled,
                 -> {
-                    _state.update { it.copy(isLoading = false, error = signInResult.toUiText()) }
+                    handleError(signInResult.toUiText())
                 }
             }
         }
 
     private suspend fun performLogin() {
-        _state.update { it.copy(isLoading = true, error = null) }
-
+        _state.update { it.copy(isLoading = true) }
         val result =
             loginUseCase(
                 email =
@@ -95,19 +94,19 @@ class LoginViewModel(
                     _state.value.password.text
                         .toString(),
             )
-
         when (result) {
-            is DataResult.Error -> handleLoginError(result.error)
-            is DataResult.Success -> handleLoginSuccess()
+            is DataResult.Error -> handleError(result.error.toUiText())
+            is DataResult.Success -> handleSuccess()
         }
     }
 
-    private fun handleLoginError(error: AuthError) {
-        _state.update { it.copy(isLoading = false, error = error.toUiText()) }
+    private fun handleError(message: UiText) {
+        _state.update { it.copy(isLoading = false) }
+        viewModelScope.launch { _event.send(LoginScreenEvent.ShowError(message)) }
     }
 
-    private suspend fun handleLoginSuccess() {
-        _state.update { it.copy(isLoading = false, error = null) }
+    private suspend fun handleSuccess() {
+        _state.update { it.copy(isLoading = false) }
         _event.send(LoginScreenEvent.NavigateToMain)
     }
 }

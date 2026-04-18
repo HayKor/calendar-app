@@ -1,5 +1,6 @@
 package com.haykor.calendar.core.common.presentation.model
 
+import android.content.Context
 import androidx.annotation.StringRes
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.res.stringResource
@@ -18,5 +19,11 @@ sealed interface UiText {
         when (this) {
             is DynamicString -> value
             is StringResource -> stringResource(resId)
+        }
+
+    fun asString(context: Context): String =
+        when (this) {
+            is DynamicString -> value
+            is StringResource -> context.getString(resId)
         }
 }
