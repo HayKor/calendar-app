@@ -1,7 +1,5 @@
 package com.haykor.calendar.core.common.domain.model
 
-interface RootError
-
 sealed interface DataResult<out D, out E : RootError> {
     data class Success<out D>(
         val data: D,
