@@ -20,6 +20,8 @@ import androidx.compose.material3.Icon
 import androidx.compose.material3.LoadingIndicator
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
+import androidx.compose.material3.SnackbarHost
+import androidx.compose.material3.SnackbarHostState
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
@@ -34,7 +36,6 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.SpanStyle
 import androidx.compose.ui.text.buildAnnotatedString
 import androidx.compose.ui.text.withStyle
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.haykor.calendar.R
@@ -42,7 +43,6 @@ import com.haykor.calendar.core.common.presentation.component.AppButton
 import com.haykor.calendar.core.common.presentation.component.AppIcon
 import com.haykor.calendar.core.common.presentation.component.AppOutlinedSecretTextField
 import com.haykor.calendar.core.common.presentation.component.AppOutlinedTextField
-import com.haykor.calendar.core.ui.theme.AppTheme
 import com.haykor.calendar.core.ui.theme.LocalSpacing
 import com.haykor.calendar.feature.auth.presentation.error.EmailError
 import com.haykor.calendar.feature.auth.presentation.error.PasswordError
@@ -62,21 +62,20 @@ fun LoginScreen(
     viewModel: LoginViewModel = koinViewModel(),
 ) {
     val state by viewModel.state.collectAsStateWithLifecycle()
+    val snackBarHostState = remember { SnackbarHostState() }
+    val context = LocalContext.current
 
     LaunchedEffect(onLoginSuccess) {
         viewModel.event.collect { event ->
             when (event) {
                 LoginScreenEvent.NavigateToMain -> onLoginSuccess()
+                is LoginScreenEvent.ShowError -> snackBarHostState.showSnackbar(message = event.message.asString(context))
             }
         }
     }
-    val context = LocalContext.current
-
-    state.error?.let {
-        Toast.makeText(context, it.asString(), Toast.LENGTH_SHORT).show()
-    }
 
     Scaffold(
+        snackbarHost = { SnackbarHost(snackBarHostState) },
         modifier = modifier.fillMaxSize(),
     ) { paddingValues ->
         LoginScreen(
@@ -117,6 +116,7 @@ private fun LoginScreen(
         Spacer(Modifier.height(spacing.extraMedium))
         LoginOptionsSection(
             onTryLogin = { onIntent(LoginScreenIntent.TryLogin) },
+            onTryGoogleSignIn = { onIntent(LoginScreenIntent.TryGoogleSignIn) },
             promptsNotEmpty = state.email.text.isNotEmpty() && state.password.text.isNotEmpty(),
             isLoading = state.isLoading,
         )
@@ -213,6 +213,7 @@ private fun AppTitleWithIcon(modifier: Modifier = Modifier) {
 @Composable
 private fun LoginOptionsSection(
     onTryLogin: () -> Unit,
+    onTryGoogleSignIn: () -> Unit,
     isLoading: Boolean,
     promptsNotEmpty: Boolean,
     modifier: Modifier = Modifier,
@@ -237,25 +238,38 @@ private fun LoginOptionsSection(
             }
         }
         DividerWithText(text = "or")
-        AppButton(
-            onClick = {},
-            containerColor = MaterialTheme.colorScheme.surfaceContainer,
+        GoogleSignInButton(
+            onTryGoogleSignIn = onTryGoogleSignIn,
             modifier = Modifier.fillMaxWidth(),
+        )
+    }
+}
+
+@Composable
+private fun GoogleSignInButton(
+    onTryGoogleSignIn: () -> Unit,
+    modifier: Modifier = Modifier,
+) {
+    val spacing = LocalSpacing.current
+
+    AppButton(
+        onClick = onTryGoogleSignIn,
+        containerColor = MaterialTheme.colorScheme.surfaceContainer,
+        modifier = modifier,
+    ) {
+        Row(
+            verticalAlignment = Alignment.CenterVertically,
+            horizontalArrangement = Arrangement.spacedBy(spacing.small),
         ) {
-            Row(
-                verticalAlignment = Alignment.CenterVertically,
-                horizontalArrangement = Arrangement.spacedBy(spacing.small),
-            ) {
-                Icon(
-                    painterResource(R.drawable.google_24dp),
-                    contentDescription = "Google logo",
-                    tint = Color.Unspecified,
-                )
-                Text(
-                    text = "Continue with Google",
-                    style = MaterialTheme.typography.bodyLarge,
-                )
-            }
+            Icon(
+                painterResource(R.drawable.google_24dp),
+                contentDescription = "Google logo",
+                tint = Color.Unspecified,
+            )
+            Text(
+                text = "Continue with Google",
+                style = MaterialTheme.typography.bodyLarge,
+            )
         }
     }
 }
@@ -317,16 +331,17 @@ private fun SignUpPrompt(
     }
 }
 
-@Preview(showSystemUi = true)
-@Composable
-private fun LoginScreenPreview() {
-    AppTheme {
-        Scaffold { paddingValues ->
-            LoginScreen(
-                state = LoginState(),
-                onIntent = {},
-                modifier = Modifier.padding(paddingValues),
-            )
-        }
-    }
-}
+// @Preview(showSystemUi = true)
+// @Composable
+// private fun LoginScreenPreview() {
+//    AppTheme {
+//        Scaffold { paddingValues ->
+//            LoginScreen(
+//                state = LoginState(),
+//                googleSignInRequest = GetCredentialRequest.getDefaultRequest(),
+//                onIntent = {},
+//                modifier = Modifier.padding(paddingValues),
+//            )
+//        }
+//    }
+// }

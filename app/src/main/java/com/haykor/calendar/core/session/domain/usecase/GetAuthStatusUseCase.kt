@@ -1,28 +1,28 @@
-package com.haykor.calendar.feature.auth.domain.usecase
+package com.haykor.calendar.core.session.domain.usecase
 
 import com.haykor.calendar.core.common.domain.model.DataResult
-import com.haykor.calendar.core.data.local.datastore.TokenManager
-import com.haykor.calendar.feature.auth.domain.model.AuthError
-import com.haykor.calendar.feature.auth.domain.model.AuthStatus
+import com.haykor.calendar.core.session.domain.model.SessionError
+import com.haykor.calendar.core.session.domain.model.SessionStatus
+import com.haykor.calendar.core.session.domain.repository.TokenManager
 
 class GetAuthStatusUseCase(
     private val tokenManager: TokenManager,
 ) {
-    suspend operator fun invoke(): DataResult<AuthStatus, AuthError> {
+    suspend operator fun invoke(): DataResult<SessionStatus, SessionError> {
         val refreshToken = tokenManager.getRefreshToken()
 
         return when {
             hasValidAccessToken() -> {
-                DataResult.Success(AuthStatus.Authorized)
+                DataResult.Success(SessionStatus.Authorized)
             }
 
             !tokenManager.isRefreshTokenExpired() && refreshToken != null -> {
-                DataResult.Success(AuthStatus.CanRefreshTokens(refreshToken))
+                DataResult.Success(SessionStatus.CanRefreshTokens(refreshToken))
             }
 
             else -> {
                 tokenManager.clearTokens()
-                DataResult.Success(AuthStatus.Unauthorized)
+                DataResult.Success(SessionStatus.Unauthorized)
             }
         }
     }

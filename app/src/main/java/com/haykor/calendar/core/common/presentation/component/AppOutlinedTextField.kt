@@ -99,15 +99,13 @@ fun AppOutlinedTextField(
                     contentPadding = PaddingValues(horizontal = 14.dp, vertical = 12.5.dp),
                     lineLimits = TextFieldLineLimits.SingleLine,
                     supportingText =
-                        if (caption != null) {
+                        caption?.let {
                             {
                                 Text(
                                     text = caption,
                                     style = MaterialTheme.typography.bodySmall,
                                 )
                             }
-                        } else {
-                            null
                         },
                     container = {
                         OutlinedTextFieldDefaults.Container(

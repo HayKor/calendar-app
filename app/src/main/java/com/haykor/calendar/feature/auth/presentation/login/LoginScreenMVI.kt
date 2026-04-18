@@ -8,10 +8,16 @@ import com.haykor.calendar.feature.auth.presentation.error.PasswordError
 
 sealed interface LoginScreenEvent {
     data object NavigateToMain : LoginScreenEvent
+
+    data class ShowError(
+        val message: UiText,
+    ) : LoginScreenEvent
 }
 
 sealed interface LoginScreenIntent {
     data object TryLogin : LoginScreenIntent
+
+    data object TryGoogleSignIn : LoginScreenIntent
 
     data object NavigateToSignup : LoginScreenIntent
 }
@@ -22,6 +28,5 @@ data class LoginState(
     val emailError: EmailError? = null,
     val password: TextFieldState = TextFieldState(),
     val passwordError: PasswordError? = null,
-    val error: UiText? = null,
     val isLoading: Boolean = false,
 )

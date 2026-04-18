@@ -17,6 +17,11 @@ style:
     ignoreAnnotated:
       - 'Preview'
       - 'PreviewLightDark'
+complexity:
+  LongParameterList:
+    active: true
+    ignoreAnnotated:
+      - 'Composable'
 
 Compose:
   ComposableAnnotationNaming:

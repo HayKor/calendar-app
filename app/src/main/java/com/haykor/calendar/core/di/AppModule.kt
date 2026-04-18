@@ -4,7 +4,8 @@ import android.util.Log
 import androidx.datastore.preferences.core.PreferenceDataStoreFactory
 import androidx.datastore.preferences.preferencesDataStoreFile
 import com.haykor.calendar.BuildConfig
-import com.haykor.calendar.core.data.local.datastore.TokenManager
+import com.haykor.calendar.core.session.data.local.datastore.DataStoreTokenManager
+import com.haykor.calendar.core.session.domain.repository.TokenManager
 import io.ktor.client.HttpClient
 import io.ktor.client.engine.okhttp.OkHttp
 import io.ktor.client.plugins.contentnegotiation.ContentNegotiation
@@ -29,7 +30,7 @@ val appModule =
             )
         }
 
-        single { new(::TokenManager) }
+        single<TokenManager> { new(::DataStoreTokenManager) }
 
         single {
             HttpClient(OkHttp) {
