@@ -40,9 +40,9 @@ class CredentialManagerGoogleSignInClient(
             } else {
                 GoogleSignInResult.Failure
             }
-        } catch (e: GetCredentialCancellationException) {
+        } catch (_: GetCredentialCancellationException) {
             GoogleSignInResult.Cancelled
-        } catch (e: GetCredentialException) {
+        } catch (_: GetCredentialException) {
             GoogleSignInResult.Failure
         }
 }

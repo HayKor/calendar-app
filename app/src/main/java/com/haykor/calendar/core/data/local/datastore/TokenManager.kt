@@ -24,12 +24,18 @@ class TokenManager(
     }
 
     suspend fun saveTokens(tokens: Tokens) {
-        Log.d(TAG, "Saving tokens — accessExpiresIn=${tokens.accessTokenExpiresIn}ms, refreshExpiresIn=${tokens.refreshTokenExpiresIn}ms")
+        Log.d(
+            TAG,
+            "Saving tokens — accessExpiresIn=${tokens.accessTokenExpiresIn}ms," +
+                " refreshExpiresIn=${tokens.refreshTokenExpiresIn}ms",
+        )
         dataStore.edit { preferences ->
             preferences[ACCESS_TOKEN] = tokens.accessToken
             preferences[REFRESH_TOKEN] = tokens.refreshToken
-            preferences[ACCESS_TOKEN_EXPIRY] = System.currentTimeMillis() + tokens.accessTokenExpiresIn
-            preferences[REFRESH_TOKEN_EXPIRY] = System.currentTimeMillis() + tokens.refreshTokenExpiresIn
+            preferences[ACCESS_TOKEN_EXPIRY] =
+                System.currentTimeMillis() + tokens.accessTokenExpiresIn
+            preferences[REFRESH_TOKEN_EXPIRY] =
+                System.currentTimeMillis() + tokens.refreshTokenExpiresIn
         }
         Log.d(TAG, "Tokens saved successfully")
     }
@@ -50,7 +56,10 @@ class TokenManager(
         val isExpired = now >= expiry - ACCESS_TOKEN_BUFFER_MS
         Log.d(
             TAG,
-            "isAccessTokenExpired=$isExpired — now=$now, expiry=$expiry, buffer=$ACCESS_TOKEN_BUFFER_MS, remainingMs=${expiry - now}",
+            "isAccessTokenExpired=$isExpired — now=$now," +
+                " expiry=$expiry," +
+                " buffer=$ACCESS_TOKEN_BUFFER_MS," +
+                " remainingMs=${expiry - now}",
         )
         return isExpired
     }
@@ -59,7 +68,10 @@ class TokenManager(
         val now = System.currentTimeMillis()
         val expiry = dataStore.data.map { it[REFRESH_TOKEN_EXPIRY] ?: 0L }.first()
         val isExpired = now >= expiry
-        Log.d(TAG, "isRefreshTokenExpired=$isExpired — now=$now, expiry=$expiry, remainingMs=${expiry - now}")
+        Log.d(
+            TAG,
+            "isRefreshTokenExpired=$isExpired — now=$now, expiry=$expiry, remainingMs=${expiry - now}",
+        )
         return isExpired
     }
 

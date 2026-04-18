@@ -16,7 +16,7 @@ class HealthCheckServiceImpl(
                 HttpStatusCode.OK -> true
                 else -> false
             }
-        } catch (e: IOException) {
+        } catch (_: IOException) {
             false
         }
 }

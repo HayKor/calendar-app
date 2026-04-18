@@ -11,7 +11,6 @@ import com.haykor.calendar.feature.auth.presentation.login.LoginViewModel
 import com.haykor.calendar.feature.auth.presentation.validation.AndroidEmailFormatChecker
 import com.haykor.calendar.feature.auth.presentation.validation.EmailFormatChecker
 import com.haykor.calendar.feature.auth.presentation.validation.EmailValidator
-import com.haykor.calendar.feature.splash.presentation.splash.SplashScreenViewModel
 import org.koin.android.ext.koin.androidContext
 import org.koin.core.module.dsl.new
 import org.koin.core.module.dsl.viewModel
@@ -33,6 +32,5 @@ val authModule =
         single { new(::LoginUseCase) }
         single { new(::GoogleLoginUseCase) }
 
-        viewModel { new(::SplashScreenViewModel) }
         viewModel { new(::LoginViewModel) }
     }

@@ -1,26 +1,26 @@
-package com.haykor.calendar.feature.splash.domain.usecase
+package com.haykor.calendar.core.session.domain.usecase
 
 import com.haykor.calendar.core.common.domain.model.DataResult
+import com.haykor.calendar.core.common.domain.model.SessionError
+import com.haykor.calendar.core.common.domain.model.SessionStatus
 import com.haykor.calendar.core.common.domain.model.flatMap
-import com.haykor.calendar.feature.auth.domain.model.AuthError
-import com.haykor.calendar.feature.auth.domain.model.AuthStatus
 
 class EnsureAuthenticatedUseCase(
     private val getAuthStatusUseCase: GetAuthStatusUseCase,
     private val refreshTokenUseCase: RefreshTokenUseCase,
 ) {
-    suspend operator fun invoke(): DataResult<Unit, AuthError> =
+    suspend operator fun invoke(): DataResult<Unit, SessionError> =
         getAuthStatusUseCase().flatMap { status ->
             when (status) {
-                AuthStatus.Authorized -> {
+                SessionStatus.Authorized -> {
                     DataResult.Success(Unit)
                 }
 
-                AuthStatus.Unauthorized -> {
-                    DataResult.Error(AuthError.SessionExpired)
+                SessionStatus.Unauthorized -> {
+                    DataResult.Error(SessionError.SessionExpired)
                 }
 
-                is AuthStatus.CanRefreshTokens -> {
+                is SessionStatus.CanRefreshTokens -> {
                     refreshTokenUseCase(status.refreshToken)
                 }
             }

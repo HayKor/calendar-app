@@ -3,10 +3,10 @@ package com.haykor.calendar.feature.splash.presentation.splash
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.haykor.calendar.core.common.domain.model.DataResult
-import com.haykor.calendar.feature.auth.domain.model.AuthError
-import com.haykor.calendar.feature.auth.presentation.mapper.toUiText
+import com.haykor.calendar.core.common.domain.model.SessionError
+import com.haykor.calendar.core.session.domain.usecase.EnsureAuthenticatedUseCase
+import com.haykor.calendar.core.session.presentation.mapper.toUiText
 import com.haykor.calendar.feature.splash.domain.usecase.CheckServiceAccessibilityUseCase
-import com.haykor.calendar.feature.splash.domain.usecase.EnsureAuthenticatedUseCase
 import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
@@ -45,7 +45,7 @@ class SplashScreenViewModel(
                     _state.update {
                         it.copy(
                             isLoading = false,
-                            error = AuthError.NetworkError.toUiText(),
+                            error = SessionError.NetworkError.toUiText(),
                         )
                     }
                     return@launch
@@ -60,16 +60,14 @@ class SplashScreenViewModel(
 
                 is DataResult.Error -> {
                     when (result.error) {
-                        AuthError.SessionExpired,
-                        AuthError.Unauthorized,
-                        AuthError.UserNotFound,
+                        SessionError.SessionExpired,
                         -> {
                             _state.update { it.copy(isLoading = false) }
                             _event.send(SplashScreenEvent.NavigateToAuth)
                         }
 
-                        AuthError.NetworkError,
-                        AuthError.UnknownError,
+                        SessionError.NetworkError,
+                        SessionError.UnknownError,
                         -> {
                             _state.update {
                                 it.copy(

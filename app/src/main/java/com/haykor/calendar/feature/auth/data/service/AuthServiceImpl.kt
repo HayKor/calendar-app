@@ -1,7 +1,9 @@
 package com.haykor.calendar.feature.auth.data.service
 
 import com.haykor.calendar.core.common.domain.model.DataResult
+import com.haykor.calendar.core.common.domain.model.SessionError
 import com.haykor.calendar.core.common.domain.model.Tokens
+import com.haykor.calendar.core.session.domain.mapper.toSessionError
 import com.haykor.calendar.feature.auth.data.mapper.toDomain
 import com.haykor.calendar.feature.auth.data.model.AuthResponse
 import com.haykor.calendar.feature.auth.data.model.GoogleIdTokenRequest
@@ -21,7 +23,7 @@ import java.io.IOException
 class AuthServiceImpl(
     private val httpClient: HttpClient,
 ) : AuthService {
-    override suspend fun refreshTokens(refreshToken: String): DataResult<Tokens, AuthError> =
+    override suspend fun refreshTokens(refreshToken: String): DataResult<Tokens, SessionError> =
         try {
             val response: HttpResponse =
                 httpClient
@@ -31,11 +33,11 @@ class AuthServiceImpl(
 
             when (response.status) {
                 HttpStatusCode.OK -> DataResult.Success(response.body<AuthResponse>().toDomain())
-                HttpStatusCode.Unauthorized -> DataResult.Error(AuthError.Unauthorized)
-                else -> DataResult.Error(AuthError.UnknownError)
+                HttpStatusCode.Unauthorized -> DataResult.Error(SessionError.SessionExpired)
+                else -> DataResult.Error(SessionError.UnknownError)
             }
         } catch (e: IOException) {
-            DataResult.Error(e.toAuthError())
+            DataResult.Error(e.toSessionError())
         }
 
     override suspend fun login(

@@ -1,13 +1,14 @@
-package com.haykor.calendar.feature.splash.data
+package com.haykor.calendar.feature.splash.data.service
 
 import android.content.Context
 import android.net.ConnectivityManager
 import android.net.NetworkCapabilities
+import com.haykor.calendar.feature.splash.domain.service.NetworkMonitor
 
-class NetworkMonitor(
+class AndroidNetworkMonitor(
     private val context: Context,
-) {
-    fun isOnline(): Boolean {
+) : NetworkMonitor {
+    override fun isOnline(): Boolean {
         val connectivityManager =
             context.getSystemService(Context.CONNECTIVITY_SERVICE) as ConnectivityManager
         val network = connectivityManager.activeNetwork ?: return false
