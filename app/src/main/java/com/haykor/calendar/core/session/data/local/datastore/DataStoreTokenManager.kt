@@ -1,4 +1,4 @@
-package com.haykor.calendar.core.data.local.datastore
+package com.haykor.calendar.core.session.data.local.datastore
 
 import android.util.Log
 import androidx.datastore.core.DataStore
@@ -7,12 +7,13 @@ import androidx.datastore.preferences.core.edit
 import androidx.datastore.preferences.core.longPreferencesKey
 import androidx.datastore.preferences.core.stringPreferencesKey
 import com.haykor.calendar.core.common.domain.model.Tokens
+import com.haykor.calendar.core.session.domain.repository.TokenManager
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.map
 
-class TokenManager(
+class DataStoreTokenManager(
     private val dataStore: DataStore<Preferences>,
-) {
+) : TokenManager {
     private companion object {
         val ACCESS_TOKEN = stringPreferencesKey("access_token")
         val REFRESH_TOKEN = stringPreferencesKey("refresh_token")
@@ -23,7 +24,7 @@ class TokenManager(
         const val TAG = "TokenManager"
     }
 
-    suspend fun saveTokens(tokens: Tokens) {
+    override suspend fun saveTokens(tokens: Tokens) {
         Log.d(
             TAG,
             "Saving tokens — accessExpiresIn=${tokens.accessTokenExpiresIn}ms," +
@@ -40,17 +41,17 @@ class TokenManager(
         Log.d(TAG, "Tokens saved successfully")
     }
 
-    suspend fun getAccessToken(): String? =
+    override suspend fun getAccessToken(): String? =
         dataStore.data.map { it[ACCESS_TOKEN] }.first().also { token ->
             Log.d(TAG, "getAccessToken — ${if (token != null) "found" else "not found"}")
         }
 
-    suspend fun getRefreshToken(): String? =
+    override suspend fun getRefreshToken(): String? =
         dataStore.data.map { it[REFRESH_TOKEN] }.first().also { token ->
             Log.d(TAG, "getRefreshToken — ${if (token != null) "found" else "not found"}")
         }
 
-    suspend fun isAccessTokenExpired(): Boolean {
+    override suspend fun isAccessTokenExpired(): Boolean {
         val now = System.currentTimeMillis()
         val expiry = dataStore.data.map { it[ACCESS_TOKEN_EXPIRY] ?: 0L }.first()
         val isExpired = now >= expiry - ACCESS_TOKEN_BUFFER_MS
@@ -64,7 +65,7 @@ class TokenManager(
         return isExpired
     }
 
-    suspend fun isRefreshTokenExpired(): Boolean {
+    override suspend fun isRefreshTokenExpired(): Boolean {
         val now = System.currentTimeMillis()
         val expiry = dataStore.data.map { it[REFRESH_TOKEN_EXPIRY] ?: 0L }.first()
         val isExpired = now >= expiry
@@ -75,7 +76,7 @@ class TokenManager(
         return isExpired
     }
 
-    suspend fun clearTokens() {
+    override suspend fun clearTokens() {
         Log.d(TAG, "Clearing all tokens")
         dataStore.edit { preferences ->
             preferences.remove(ACCESS_TOKEN)

@@ -1,8 +1,8 @@
 package com.haykor.calendar.core.session.presentation.mapper
 
 import com.haykor.calendar.R
-import com.haykor.calendar.core.common.domain.model.SessionError
 import com.haykor.calendar.core.common.presentation.model.UiText
+import com.haykor.calendar.core.session.domain.model.SessionError
 
 fun SessionError.toUiText() =
     when (this) {

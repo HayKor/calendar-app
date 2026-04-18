@@ -1,4 +1,4 @@
-package com.haykor.calendar.core.common.domain.model
+package com.haykor.calendar.core.session.domain.model
 
 sealed interface SessionStatus {
     data object Authorized : SessionStatus

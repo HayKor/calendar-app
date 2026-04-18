@@ -1,9 +1,9 @@
 package com.haykor.calendar.feature.auth.data.service
 
 import com.haykor.calendar.core.common.domain.model.DataResult
-import com.haykor.calendar.core.common.domain.model.SessionError
 import com.haykor.calendar.core.common.domain.model.Tokens
 import com.haykor.calendar.core.session.domain.mapper.toSessionError
+import com.haykor.calendar.core.session.domain.model.SessionError
 import com.haykor.calendar.feature.auth.data.mapper.toDomain
 import com.haykor.calendar.feature.auth.data.model.AuthResponse
 import com.haykor.calendar.feature.auth.data.model.GoogleIdTokenRequest

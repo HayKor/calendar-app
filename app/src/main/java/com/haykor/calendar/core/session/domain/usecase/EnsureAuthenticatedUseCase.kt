@@ -1,9 +1,9 @@
 package com.haykor.calendar.core.session.domain.usecase
 
 import com.haykor.calendar.core.common.domain.model.DataResult
-import com.haykor.calendar.core.common.domain.model.SessionError
-import com.haykor.calendar.core.common.domain.model.SessionStatus
 import com.haykor.calendar.core.common.domain.model.flatMap
+import com.haykor.calendar.core.session.domain.model.SessionError
+import com.haykor.calendar.core.session.domain.model.SessionStatus
 
 class EnsureAuthenticatedUseCase(
     private val getAuthStatusUseCase: GetAuthStatusUseCase,

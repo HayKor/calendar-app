@@ -1,9 +1,9 @@
 package com.haykor.calendar.core.session.domain.usecase
 
 import com.haykor.calendar.core.common.domain.model.DataResult
-import com.haykor.calendar.core.common.domain.model.SessionError
 import com.haykor.calendar.core.common.domain.model.map
-import com.haykor.calendar.core.data.local.datastore.TokenManager
+import com.haykor.calendar.core.session.domain.model.SessionError
+import com.haykor.calendar.core.session.domain.repository.TokenManager
 import com.haykor.calendar.core.session.domain.service.TokensRefreshService
 
 class RefreshTokenUseCase(

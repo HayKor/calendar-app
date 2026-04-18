@@ -1,4 +1,6 @@
-package com.haykor.calendar.core.common.domain.model
+package com.haykor.calendar.core.session.domain.model
+
+import com.haykor.calendar.core.common.domain.model.RootError
 
 sealed interface SessionError : RootError {
     data object NetworkError : SessionError

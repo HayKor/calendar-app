@@ -3,7 +3,7 @@ package com.haykor.calendar.feature.splash.presentation.splash
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.haykor.calendar.core.common.domain.model.DataResult
-import com.haykor.calendar.core.common.domain.model.SessionError
+import com.haykor.calendar.core.session.domain.model.SessionError
 import com.haykor.calendar.core.session.domain.usecase.EnsureAuthenticatedUseCase
 import com.haykor.calendar.core.session.presentation.mapper.toUiText
 import com.haykor.calendar.feature.splash.domain.usecase.CheckServiceAccessibilityUseCase

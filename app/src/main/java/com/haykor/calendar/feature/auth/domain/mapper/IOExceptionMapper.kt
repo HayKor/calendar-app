@@ -1,17 +1,17 @@
-package com.haykor.calendar.core.session.domain.mapper
+package com.haykor.calendar.feature.auth.domain.mapper
 
-import com.haykor.calendar.core.session.domain.model.SessionError
+import com.haykor.calendar.feature.auth.domain.model.AuthError
 import java.io.IOException
 import java.net.ConnectException
 import java.net.SocketTimeoutException
 import java.net.UnknownHostException
 
-fun IOException.toSessionError(): SessionError =
+fun IOException.toAuthError(): AuthError =
     when (this) {
         is UnknownHostException,
         is ConnectException,
         is SocketTimeoutException,
-        -> SessionError.NetworkError
+        -> AuthError.NetworkError
 
-        else -> SessionError.UnknownError
+        else -> AuthError.UnknownError
     }
