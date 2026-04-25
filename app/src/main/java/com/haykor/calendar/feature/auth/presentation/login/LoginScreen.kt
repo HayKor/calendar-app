@@ -1,6 +1,5 @@
 package com.haykor.calendar.feature.auth.presentation.login
 
-import android.widget.Toast
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.layout.Arrangement
@@ -36,6 +35,7 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.SpanStyle
 import androidx.compose.ui.text.buildAnnotatedString
 import androidx.compose.ui.text.withStyle
+import androidx.compose.ui.tooling.preview.PreviewLightDark
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.haykor.calendar.R
@@ -43,6 +43,7 @@ import com.haykor.calendar.core.common.presentation.component.AppButton
 import com.haykor.calendar.core.common.presentation.component.AppIcon
 import com.haykor.calendar.core.common.presentation.component.AppOutlinedSecretTextField
 import com.haykor.calendar.core.common.presentation.component.AppOutlinedTextField
+import com.haykor.calendar.core.ui.theme.AppTheme
 import com.haykor.calendar.core.ui.theme.LocalSpacing
 import com.haykor.calendar.feature.auth.presentation.error.EmailError
 import com.haykor.calendar.feature.auth.presentation.error.PasswordError
@@ -68,8 +69,18 @@ fun LoginScreen(
     LaunchedEffect(onLoginSuccess) {
         viewModel.event.collect { event ->
             when (event) {
-                LoginScreenEvent.NavigateToMain -> onLoginSuccess()
-                is LoginScreenEvent.ShowError -> snackBarHostState.showSnackbar(message = event.message.asString(context))
+                LoginScreenEvent.NavigateToMain -> {
+                    onLoginSuccess()
+                }
+
+                is LoginScreenEvent.ShowError -> {
+                    snackBarHostState.showSnackbar(
+                        message =
+                            event.message.asString(
+                                context,
+                            ),
+                    )
+                }
             }
         }
     }
@@ -331,17 +342,16 @@ private fun SignUpPrompt(
     }
 }
 
-// @Preview(showSystemUi = true)
-// @Composable
-// private fun LoginScreenPreview() {
-//    AppTheme {
-//        Scaffold { paddingValues ->
-//            LoginScreen(
-//                state = LoginState(),
-//                googleSignInRequest = GetCredentialRequest.getDefaultRequest(),
-//                onIntent = {},
-//                modifier = Modifier.padding(paddingValues),
-//            )
-//        }
-//    }
-// }
+@PreviewLightDark
+@Composable
+private fun LoginScreenPreview() {
+    AppTheme {
+        Scaffold { paddingValues ->
+            LoginScreen(
+                state = LoginState(),
+                onIntent = {},
+                modifier = Modifier.padding(paddingValues),
+            )
+        }
+    }
+}
