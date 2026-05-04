@@ -17,3 +17,11 @@ sealed interface PasswordError {
 
     data object TooShort : PasswordError
 }
+// Обработка имени пользователя, если надо кнш)))
+@Stable
+sealed interface NameError {
+    data object Empty : NameError
+
+    data object Invalid : NameError
+
+}
