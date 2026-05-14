@@ -13,7 +13,7 @@ interface AuthService : TokensRefreshService {
     ): DataResult<Tokens, AuthError>
 
     // Отдельная функция для регистрации
-    //TODO Надо ли отдельно создавать интерфейс под нее???
+
     suspend fun register(
         email: String,
         password: String,
