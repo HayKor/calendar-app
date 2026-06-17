@@ -91,7 +91,7 @@ class AuthServiceImpl(
             return try {
                 val response: HttpResponse =
                     httpClient
-                        .post("auth/signup") {
+                        .post("user/") {
                             setBody(SignupRequest(name = name, email = email, password = password))
                         }
 
