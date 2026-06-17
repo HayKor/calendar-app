@@ -16,7 +16,7 @@ class SignupUseCase(
         password: String,
         name: String
     ): DataResult<Tokens, SignupError> =
-        //TODO заменить затычку на правильную реализуцию
+
         when (val result = authService.register(email, password, name)) {
             is DataResult.Success-> {
                 tokenManager.saveTokens(result.data)

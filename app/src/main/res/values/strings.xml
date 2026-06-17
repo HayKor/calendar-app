@@ -48,4 +48,8 @@
     <!-- MISCELLANEOUS MESSAGES -->
     <!-- ======================================================= -->
     <string name="welcome_to">"Welcome to "</string>
+    <!-- ======================================================= -->
+    <!-- SIGNUP MESSAGES -->
+    <!-- ======================================================= -->
+    <string name="user_exists">User already exists.</string>
 </resources>

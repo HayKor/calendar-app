@@ -2,11 +2,13 @@ package com.haykor.calendar.feature.auth.presentation.signup
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.haykor.calendar.core.common.domain.model.DataResult
 import com.haykor.calendar.core.common.presentation.model.UiText
 import com.haykor.calendar.feature.auth.domain.service.GoogleSignInClient
 import com.haykor.calendar.feature.auth.domain.usecase.SignupUseCase
 import com.haykor.calendar.feature.auth.presentation.login.LoginScreenEvent
 import com.haykor.calendar.feature.auth.presentation.login.LoginScreenIntent
+import com.haykor.calendar.feature.auth.presentation.mapper.toUiText
 import com.haykor.calendar.feature.auth.presentation.validation.EmailValidator
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
@@ -51,6 +53,24 @@ class SignupViewModel (
 
     private suspend fun performSignup() {
         // дописать
+        _state.update { it.copy(isLoading = true) }
+        val result =
+            signupUseCase(
+
+                email =
+                    _state.value.email.text
+                        .toString(),
+                password =
+                    _state.value.password.text
+                        .toString(),
+                name =
+                    _state.value.name.text
+                        .toString()
+            )
+        when (result) {
+            is DataResult.Error -> handleError(result.error.toUiText())
+            is DataResult.Success -> handleSuccess()
+        }
     }
 
     private fun handleError(message: UiText) {
