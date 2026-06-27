@@ -10,6 +10,8 @@ import com.haykor.calendar.feature.auth.presentation.login.LoginScreenEvent
 import com.haykor.calendar.feature.auth.presentation.login.LoginScreenIntent
 import com.haykor.calendar.feature.auth.presentation.mapper.toUiText
 import com.haykor.calendar.feature.auth.presentation.validation.EmailValidator
+import com.haykor.calendar.feature.auth.presentation.validation.PasswordValidator
+import com.haykor.calendar.feature.auth.presentation.validation.PasswordValidator.invoke
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.channels.Channel
@@ -45,14 +47,38 @@ class SignupViewModel (
     }
 
     //TODO Написать функции для попытки регистрации и через гугл и для регистрации
-    private fun trySignup() = Unit
+//namevalidator
+    private fun trySignup() =
+        viewModelScope.launch {
+            val nameError =
+                nameValidator(
+                    _state.value.name.text
+                        .toString(),
+                )
+            val emailError =
+                emailValidator(
+                    _state.value.email.text
+                        .toString(),
+                )
+            val passwordError =
+                PasswordValidator(
+                    _state.value.password.text
+                        .toString(),
+                )
+
+            _state.update { it.copy(emailError = emailError, passwordError = passwordError, nameError = nameError) }
+
+            if (emailError != null || passwordError != null) return@launch
+
+            performSignup()
+        }
 
 
     private fun tryGoogleSignUp() = Unit
 
 
     private suspend fun performSignup() {
-        // дописать
+
         _state.update { it.copy(isLoading = true) }
         val result =
             signupUseCase(
